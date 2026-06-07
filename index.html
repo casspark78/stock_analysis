@@ -147,7 +147,7 @@
     <input type="date" class="date-input" id="datePicker">
     <button class="btn" onclick="openReport()">리포트 보기</button>
     <div class="divider">또는</div>
-    <button class="btn btn-today" onclick="openToday()">⚡ 오늘 리포트</button>
+    <button class="btn btn-today" onclick="openToday()">⚡ 최신 리포트 (어제)</button>
     <div id="errorMsg" class="error-msg">해당 날짜의 리포트가 없습니다.</div>
 
     <div class="recent-title">최근 리포트</div>
@@ -159,11 +159,13 @@
   <script>
     const BASE = 'https://casspark78.github.io/stock_analysis/reports/';
 
-    // 오늘 날짜 기본값 설정
+    // 어제 날짜 기본값 설정
     const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth()+1).padStart(2,'0');
-    const dd = String(today.getDate()).padStart(2,'0');
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+    const yyyy = yesterday.getFullYear();
+    const mm = String(yesterday.getMonth()+1).padStart(2,'0');
+    const dd = String(yesterday.getDate()).padStart(2,'0');
     document.getElementById('datePicker').value = `${yyyy}-${mm}-${dd}`;
 
     // 최근 7일 리스트 생성
