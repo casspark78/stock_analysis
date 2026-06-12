@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="주식 리포트">
+  <meta name="theme-color" content="#1a237e">
+  <title>📈 주식 분석 리포트</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, 'Apple SD Gothic Neo', sans-serif;
+      background: linear-gradient(135deg, #1a237e 0%, #283593 50%, #1565c0 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px 20px;
+    }
+    .app-icon { font-size: 56px; margin-bottom: 12px; }
+    .app-title { color: white; font-size: 24px; font-weight: 700; margin-bottom: 6px; }
+    .app-sub { color: rgba(255,255,255,0.7); font-size: 13px; margin-bottom: 36px; }
+    .card {
+      background: white; border-radius: 20px; padding: 28px 24px;
+      width: 100%; max-width: 420px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .card label { display: block; font-size: 13px; font-weight: 600; color: #666; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .date-input {
+      width: 100%; padding: 14px 16px; border: 2px solid #e8eaf6; border-radius: 12px;
+      font-size: 17px; color: #1a237e; font-weight: 600; outline: none;
+      margin-bottom: 16px; -webkit-appearance: none;
+    }
+    .date-input:focus { border-color: #1a237e; }
+    .btn {
+      width: 100%; padding: 16px; color: white; border: none; border-radius: 12px;
+      font-size: 17px; font-weight: 700; cursor: pointer; margin-bottom: 12px;
+      background: linear-gradient(135deg, #1a237e, #1565c0);
+    }
+    .btn:active { opacity: 0.85; }
+    .btn-today { background: linear-gradient(135deg, #f9a825, #fb8c00); }
+    .divider { text-align: center; color: #ccc; font-size: 13px; margin: 4px 0 12px; }
+    .recent-title { font-size: 13px; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin: 20px 0 12px; }
+    .recent-list { list-style: none; }
+    .recent-list li { border-top: 1px solid #f0f0f0; }
+    .recent-list a { display: flex; justify-content: space-between; align-items: center; padding: 13px 4px; text-decoration: none; color: #1a237e; font-size: 15px; font-weight: 500; }
+    .recent-list a:active { background: #f5f7ff; }
+    .badge-available { background: #e8f5e9; color: #2e7d32; font-size: 11px; padding: 3px 8px; border-radius: 10px; font-weight: 600; }
+    .arrow { color: #ccc; font-size: 18px; }
+    .footer { color: rgba(255,255,255,0.5); font-size: 12px; margin-top: 24px; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="app-icon">📈</div>
+  <div class="app-title">주식 분석 리포트</div>
+  <div class="app-sub">매일 오전 8시 업데이트</div>
+  <div class="card">
+    <label>날짜 선택</label>
+    <input type="date" class="date-input" id="datePicker">
+    <button class="btn" onclick="openReport()">리포트 보기</button>
+    <div class="divider">또는</div>
+    <button class="btn btn-today" onclick="openLatest()">⚡ 최신 리포트 (어제)</button>
+    <div class="recent-title">최근 리포트</div>
+    <ul class="recent-list" id="recentList"></ul>
+  </div>
+  <div class="footer">AI가 생성한 참고용 자료 · 투자 권유 아님</div>
+  <script>
+    const BASE = 'https://casspark78.github.io/stock_analysis/reports/';
+    const pad = n => String(n).padStart(2,'0');
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+    const yesterdayStr = `${yesterday.getFullYear()}-${pad(yesterday.getMonth()+1)}-${pad(yesterday.getDate())}`;
+    document.getElementById('datePicker').value = yesterdayStr;
+    function buildRecentList() {
+      const list = document.getElementById('recentList');
+      list.innerHTML = '';
+      for (let i = 1; i <= 7; i++) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        const dateStr = d.toISOString().slice(0,10);
+        const label = i === 1 ? '어제' : dateStr;
+        const li = document.createElement('li');
+        li.innerHTML = '<a href="' + BASE + dateStr + '.html" target="_blank"><span>' + label + ' <small style="color:#aaa;font-size:12px;">' + (i>1?dateStr:'') + '</small></span><span><span class="badge-available">보기</span> <span class="arrow">›</span></span></a>';
+        list.appendChild(li);
+      }
+    }
+    buildRecentList();
+    function openReport() {
+      const date = document.getElementById('datePicker').value;
+      if (!date) return;
+      window.open(BASE + date + '.html', '_blank');
+    }
+    function openLatest() {
+      window.open(BASE + yesterdayStr + '.html', '_blank');
+    }
+  </script>
+</body>
+</html>
