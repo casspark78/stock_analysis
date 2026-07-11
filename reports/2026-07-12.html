@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>주식/ETF 분석 리포트 2026-07-12</title>
+  <style>
+    body { font-family: 'Malgun Gothic', sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: #f5f7fa; color: #222; }
+    h1 { color: #1a237e; border-bottom: 3px solid #1a237e; padding-bottom: 10px; }
+    h2 { color: #283593; }
+    h3 { color: #1565c0; border-left: 4px solid #1565c0; padding-left: 10px; margin-top: 40px; }
+    .overall-summary { background: white; border-radius: 12px; padding: 24px; margin: 20px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.10); border-left: 6px solid #1a237e; }
+    .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; margin-top: 12px; }
+    .summary-table { min-width: 580px; border-collapse: collapse; width: 100%; }
+    .summary-table th { background: #1a237e; color: white; padding: 10px 12px; text-align: left; white-space: nowrap; }
+    .summary-table td { padding: 10px 12px; border-bottom: 1px solid #eee; white-space: nowrap; }
+    .buy { background: #e8f5e9; color: #2e7d32; }
+    .sell { background: #ffebee; color: #c62828; }
+    .hold { background: #fff8e1; color: #f57f17; }
+    .stock-card { background: white; border-radius: 12px; padding: 24px; margin: 20px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .etf-card { background: white; border-radius: 12px; padding: 24px; margin: 20px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-top: 4px solid #0288d1; }
+    .fin-table { width: 100%; border-collapse: collapse; margin: 8px 0 14px; background: #fafbff; }
+    .fin-table th { background: #e8eaf6; color: #1a237e; padding: 8px 10px; font-size: 13px; text-align: center; }
+    .fin-table td { padding: 10px; border-bottom: 1px solid #eee; font-size: 13px; text-align: center; font-weight: 600; }
+    .sell-table { width: 100%; border-collapse: collapse; margin: 4px 0 8px; background: #fff7f2; }
+    .sell-table th { background: #ffe0cc; color: #c2410c; padding: 8px 10px; font-size: 13px; text-align: center; }
+    .sell-table td { padding: 9px; border-bottom: 1px solid #f3e0d5; font-size: 13px; text-align: center; }
+    .buy-table { width: 100%; border-collapse: collapse; margin: 4px 0 8px; background: #f2f7ff; }
+    .buy-table th { background: #d6e4ff; color: #1565c0; padding: 8px 10px; font-size: 13px; text-align: center; }
+    .buy-table td { padding: 9px; border-bottom: 1px solid #dce8f5; font-size: 13px; text-align: center; }
+    .market-overview { background: white; border-radius: 12px; padding: 24px; margin: 20px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .market-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-top: 12px; }
+    .market-item { background: #f5f7fa; border-radius: 10px; padding: 14px; text-align: center; }
+    .market-name { font-size: 12px; color: #888; margin-bottom: 4px; }
+    .market-value { font-size: 17px; font-weight: bold; color: #222; }
+    .market-change { font-size: 13px; font-weight: 600; margin-top: 2px; }
+    .calendar-section { background: white; border-radius: 12px; padding: 24px; margin: 20px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 6px solid #7b1fa2; }
+    .calendar-section h2 { color: #6a1b9a; }
+    .calendar-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+    .calendar-table th { background: #f3e5f5; color: #6a1b9a; padding: 8px 10px; text-align: left; font-size: 13px; }
+    .calendar-table td { padding: 8px 10px; border-bottom: 1px solid #eee; font-size: 13px; }
+    .gemini-section { background: linear-gradient(135deg, #e8f5e9, #f1f8e9); border-radius: 12px; padding: 24px; margin: 20px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 6px solid #43a047; }
+    .gemini-section h2 { color: #2e7d32; }
+    .gemini-content { line-height: 1.8; color: #333; }
+    .recommend-section { background: linear-gradient(135deg, #fff8e1, #fffde7); border-radius: 12px; padding: 24px; margin: 20px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.10); border-left: 6px solid #f9a825; }
+    .recommend-card { background: white; border-radius: 8px; padding: 16px; margin: 12px 0; border-left: 4px solid #f9a825; }
+    .reason-tag { display: inline-block; background: #fff3e0; color: #e65100; border-radius: 12px; padding: 3px 10px; font-size: 12px; margin: 2px; }
+    .data-source { font-size: 11px; color: #aaa; margin-top: 4px; }
+    .price { font-size: 26px; font-weight: bold; }
+    .change-up { color: #c62828; }
+    .change-down { color: #1565c0; }
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    th { background: #e8eaf6; padding: 8px; text-align: left; }
+    td { padding: 8px; border-bottom: 1px solid #eee; }
+    .opinion { font-size: 16px; font-weight: bold; padding: 6px 16px; border-radius: 8px; display: inline-block; }
+    .news-list { list-style: none; padding: 0; }
+    .news-list li { padding: 6px 0; border-bottom: 1px solid #eee; font-size: 14px; }
+    .news-list li:before { content: "📰 "; }
+    .footer { text-align: center; color: #999; margin-top: 40px; font-size: 13px; }
+    .badge-buy { background: #e8f5e9; color: #2e7d32; padding: 3px 10px; border-radius: 8px; font-weight: bold; font-size: 13px; }
+    .badge-hold { background: #fff8e1; color: #f57f17; padding: 3px 10px; border-radius: 8px; font-weight: bold; font-size: 13px; }
+    .badge-sell { background: #ffebee; color: #c62828; padding: 3px 10px; border-radius: 8px; font-weight: bold; font-size: 13px; }
+    .badge-caution { background: #fce4ec; color: #ad1457; padding: 3px 10px; border-radius: 8px; font-weight: bold; font-size: 13px; }
+    .tech-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 12px 0; }
+    .tech-item { background: #f8f9ff; border-radius: 8px; padding: 12px; font-size: 13px; }
+    .tech-label { font-size: 11px; color: #888; margin-bottom: 4px; }
+    .tech-value { font-weight: bold; color: #1a237e; }
+    @media (max-width: 600px) {
+      body { padding: 12px; }
+      h1 { font-size: 18px; } h2 { font-size: 16px; } h3 { font-size: 15px; }
+      .overall-summary { padding: 16px 12px; }
+      .summary-table th, .summary-table td { padding: 8px 10px; font-size: 12px; }
+      .fin-table th, .fin-table td, .sell-table th, .sell-table td, .buy-table th, .buy-table td { padding: 6px 4px; font-size: 11px; }
+      .stock-card, .etf-card { padding: 16px; }
+      table { font-size: 13px; } th, td { padding: 6px 8px; }
+      .tech-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<h1>📈 주식/ETF 분석 리포트 — 2026-07-12</h1>
+<p>생성 시각: <strong>2026-07-12 KST</strong> | <strong>분석 기준: 2026-07-10 종가</strong> (직전 금요일)<br>
+<span style="font-size:12px;color:#888;">※ 오늘(7/12 일요일)은 장 미개장일 → 직전 거래일(7/10 금요일) 종가 기준</span></p>
+
+<!-- ====== 시장 현황 ====== -->
+<section class="market-overview">
+  <h2>🌐 시장 현황 (2026-07-10 종가 기준)</h2>
+  <div class="market-grid">
+    <div class="market-item">
+      <div class="market-name">KOSPI</div>
+      <div class="market-value">7,476</div>
+      <div class="market-change change-up">▲ +2.52%</div>
+    </div>
+    <div class="market-item">
+      <div class="market-name">KOSDAQ</div>
+      <div class="market-value">837.43</div>
+      <div class="market-change change-up">▲ +5.47%</div>
+    </div>
+    <div class="market-item">
+      <div class="market-name">S&P 500</div>
+      <div class="market-value">7,575.39</div>
+      <div class="market-change change-up">▲ +0.42%</div>
+    </div>
+    <div class="market-item">
+      <div class="market-name">나스닥</div>
+      <div class="market-value">26,281.61</div>
+      <div class="market-change change-up">▲ +0.29%</div>
+    </div>
+    <div class="market-item">
+      <div class="market-name">원/달러 환율</div>
+      <div class="market-value">1,500.29</div>
+      <div class="market-change change-down">▼ -0.35%</div>
+    </div>
+    <div class="market-item">
+      <div class="market-name">미 10년물 금리</div>
+      <div class="market-value">4.56%</div>
+      <div class="market-change" style="color:#888;">▼ 소폭 하락</div>
+    </div>
+  </div>
+  <p style="font-size:12px;color:#888;margin-top:12px;">
+    ※ 7/10(금) 국내 증시 특이사항: 삼성전자 2Q26 잠정실적(OP 89.4조, 역대 최대) 수급 반영 + SK하이닉스 나스닥 상장(SKHY) 이슈로 코스닥 5.47% 급등, 코스피도 2.52% 강세 마감
+  </p>
+</section>
+
+<!-- ====== 종합 투자 의견 요약 ====== -->
+<section class="overall-summary">
+  <h2>📊 종합 투자 의견 요약 (2026-07-10 종가 기준)</h2>
+  <div class="table-wrapper">
+    <table class="summary-table">
+      <thead>
+        <tr><th>구분</th><th>종목</th><th>전일 종가</th><th>등락률</th><th>투자의견</th><th>한줄 근거</th></tr>
+      </thead>
+      <tbody>
+        <tr class="buy">
+          <td>개별주식</td><td>삼성전자 (005930)</td><td>293,000원</td><td class="change-up">+5.40%</td>
+          <td><span class="badge-buy">매수</span></td><td>2Q26 OP 89.4조 역대최대·HBM4 완판·PER 7.5배 저평가</td>
+        </tr>
+        <tr class="buy">
+          <td>개별주식</td><td>SK하이닉스 (000660)</td><td>2,190,000원*</td><td class="change-down">추정</td>
+          <td><span class="badge-buy">매수</span></td><td>PER 4.1배 저평가·ROE 95%·나스닥 상장 가치재평가 기대</td>
+        </tr>
+        <tr class="hold">
+          <td>ETF</td><td>RISE AI밸류체인 (490590)</td><td>15,630원</td><td>추정</td>
+          <td><span class="badge-hold">중립</span></td><td>커버드콜 구조 상승 제한, 월배당 수익 안정 특성</td>
+        </tr>
+        <tr class="hold">
+          <td>ETF</td><td>SOL 양자컴퓨팅 (0023A0)</td><td>데이터 없음</td><td>-</td>
+          <td><span class="badge-hold">중립</span></td><td>장기 성장 테마·단기 고변동성, 소규모 분할 접근 권고</td>
+        </tr>
+        <tr class="buy">
+          <td>ETF</td><td>TIGER 반도체TOP10 (396500)</td><td>데이터 없음</td><td>-</td>
+          <td><span class="badge-buy">매수</span></td><td>국내 반도체 강세장 집중 수혜, 삼성전자·SK하이닉스 편입</td>
+        </tr>
+        <tr class="buy">
+          <td>ETF</td><td>TIGER SK하닉레버리지 (0195S0)</td><td>데이터 없음</td><td>-</td>
+          <td><span class="badge-caution">적극매수(고위험)</span></td><td>SK하이닉스 2x 레버리지·단기 변동성 확대 주의</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:11px;color:#aaa;margin-top:8px;">* SK하이닉스 7/10 종가는 외국인 대규모 매도(나스닥 상장 관련 차익실현)로 변동성 높았으며 추정치. | SOL 양자컴퓨팅/TIGER 반도체TOP10/TIGER SK하닉레버리지 7/10 종가는 데이터 미수집.</p>
+</section>
+
+<!-- ====== 이번 주 주요 일정 ====== -->
+<section class="calendar-section">
+  <h2>🗓 이번 주 주요 일정 (2026-07-13 ~ 07-17)</h2>
+  <div class="table-wrapper">
+    <table class="calendar-table">
+      <thead><tr><th>날짜</th><th>일정</th><th>중요도</th><th>비고</th></tr></thead>
+      <tbody>
+        <tr><td>7/13 (월)</td><td>국내 증시 주간 개장·외국인 수급 동향 주목</td><td>★★☆</td><td>삼성전자·SK하이닉스 실적 후 수급 재편</td></tr>
+        <tr><td>7/14 (화)</td><td>🇺🇸 미국 CPI (소비자물가지수) 발표</td><td>★★★</td><td>KST 21:30 발표, 예상 상회 시 글로벌 증시 부담</td></tr>
+        <tr><td>7/16 (목)</td><td>🇰🇷 한국은행 금융통화위원회 기준금리 결정</td><td>★★★</td><td>현행 동결 vs 인상 여부 시장 주목</td></tr>
+        <tr><td>7/17 (금)</td><td>국내 옵션만기일</td><td>★★☆</td><td>수급 변동성 확대 가능</td></tr>
+        <tr><td>7/30 (목)</td><td>삼성전자 2Q26 확정실적 컨퍼런스콜</td><td>★★★</td><td>HBM4 가이던스·3Q 전망 주목 (다음주)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 style="font-size:14px;margin-top:20px;color:#6a1b9a;">💰 ETF 분배금 일정</h3>
+  <div class="table-wrapper">
+    <table class="calendar-table">
+      <thead><tr><th>ETF</th><th>종목코드</th><th>분배락일(예상)</th><th>지급일(예상)</th><th>예상 분배금</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>RISE 미국AI밸류체인 (월배당)</td><td>490590</td><td>2026-07-30 (예상)</td><td>2026-08-04 (예상)</td><td>약 50~80원/좌 (직전 수준 추정)</td>
+        </tr>
+        <tr>
+          <td>TIGER 반도체TOP10</td><td>396500</td><td>연 1회 (12월)</td><td>12월</td><td>연간 분배율 약 0.15%</td>
+        </tr>
+        <tr>
+          <td>SOL 미국양자컴퓨팅TOP10</td><td>0023A0</td><td>데이터 없음</td><td>-</td><td>데이터 없음</td>
+        </tr>
+        <tr>
+          <td>TIGER SK하이닉스단일종목레버리지</td><td>0195S0</td><td>분배금 없음</td><td>-</td><td>0원 (연간 분배율 0%)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:11px;color:#aaa;">※ RISE 490590 분배락일·지급일은 과거 패턴(매월 말 분배락) 기준 추정치. 공식 확인은 riseetf.co.kr 공지사항 참조.</p>
+</section>
+
+<!-- ====== 개별 주식 ====== -->
+<h3>🏢 개별 주식 상세 분석</h3>
+
+<!-- ===== 삼성전자 ===== -->
+<div class="stock-card">
+  <h2>삼성전자 <span style="font-size:14px;color:#888;">(005930.KS)</span></h2>
+  <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start;">
+    <div>
+      <div class="price change-up">293,000원</div>
+      <div style="font-size:16px;" class="change-up">▲ +15,000원 (+5.40%)</div>
+      <div style="color:#888;font-size:13px;margin-top:4px;">기준: 2026-07-10 종가</div>
+    </div>
+    <div style="font-size:13px;color:#444;line-height:1.8;">
+      <div>📊 거래량: 추정 대량 (실적 발표 후 급등)</div>
+      <div>📍 52주 고가: <b>380,000원</b> / 저가: <b>59,800원</b></div>
+      <div>📍 현재가/52주 고가 위치: <b>77.1%</b> (고가 대비 -22.9%)</div>
+      <div>🏳 외국인: 혼재 (최근 매수 후 차익실현)</div>
+      <div>🏳 기관: 혼재</div>
+    </div>
+    <div>
+      <span class="opinion" style="background:#e8f5e9;color:#2e7d32;">매수 (BUY)</span><br>
+      <span style="font-size:13px;color:#888;">컨센서스 목표가: <b>457,917원</b></span><br>
+      <span style="font-size:12px;color:#888;">Nomura: 570,000원 / NH: 490,000원</span>
+    </div>
+  </div>
+
+  <h4 style="margin:16px 0 4px;color:#1a237e;">📰 최근 주요 뉴스·공시</h4>
+  <ul class="news-list">
+    <li>2Q26 잠정실적 발표 (7/7): 매출 <b>171조원</b>, 영업이익 <b>89.4조원</b> — 역대 최대·엔비디아 분기 이익(81.9조원) 초월</li>
+    <li>HBM4 공급 완판 확정, 3분기 삼성전자 HBM 전체 매출 중 HBM4 비중 50% 돌파 전망</li>
+    <li>이재용 회장, 이달 말 미국 실리콘밸리에서 젠슨 황 엔비디아 CEO 만남 추진 (광주 팹 등 투자 협력 논의)</li>
+    <li>GTC 2026: 베라 루빈用 HBM4, SOCAMM2, PCIe 6.0 기반 기업용 SSD 'PM1763' 공개 및 양산 착수</li>
+    <li>2Q26 확정실적 컨퍼런스콜: 2026-07-30 오전 10시 예정 (HBM4 생산 확대·3Q 가이던스 주목)</li>
+  </ul>
+
+  <h4 style="margin:16px 0 4px;color:#1a237e;">⭐ 핵심 재무지표 (2026 2Q 기준)</h4>
+  <div class="table-wrapper">
+    <table class="fin-table">
+      <thead>
+        <tr><th>ROE</th><th>PER</th><th>영업이익률(추세)</th><th>부채비율</th><th>매출/영업이익 성장률(YoY)</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>52.6% 🔥<br><span style="font-size:11px;color:#2e7d32;">역대 최고 (우수)</span></td>
+          <td>약 7~8배<br><span style="font-size:11px;color:#2e7d32;">동종업 대비 저평가</span></td>
+          <td>52.1% ↗ 큰 폭 개선<br><span style="font-size:11px;color:#2e7d32;">반도체 슈퍼사이클 반영</span></td>
+          <td>순부채비율 -17.9%<br><span style="font-size:11px;color:#2e7d32;">순현금 상태 (매우 양호)</span></td>
+          <td>매출 171조 (대폭 성장)<br>영업이익 89.4조 (역대최대 ↑↑)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4 style="margin:14px 0 4px;color:#1565c0;">🔬 기술적 분석</h4>
+  <div class="tech-grid">
+    <div class="tech-item"><div class="tech-label">5일 이동평균선</div><div class="tech-value">약 275,000원</div></div>
+    <div class="tech-item"><div class="tech-label">20일 이동평균선</div><div class="tech-value">약 265,000원</div></div>
+    <div class="tech-item"><div class="tech-label">60일 이동평균선</div><div class="tech-value">약 248,000원</div></div>
+    <div class="tech-item"><div class="tech-label">RSI</div><div class="tech-value">62 (중립~약강세)</div></div>
+    <div class="tech-item"><div class="tech-label">MACD</div><div class="tech-value">골든크로스 유지 (상승)</div></div>
+    <div class="tech-item"><div class="tech-label">주요 지지선</div><div class="tech-value">280,000 / 265,000 / 248,000원</div></div>
+    <div class="tech-item"><div class="tech-label">주요 저항선</div><div class="tech-value">300,000 / 330,000 / 380,000원</div></div>
+    <div class="tech-item"><div class="tech-label">현재 위치 평가</div><div class="tech-value">20/60일선 위, 강세 구간</div></div>
+  </div>
+
+  <h4 style="margin:14px 0 4px;color:#c2410c;font-size:14px;">📉 분할 매도 제안 (목표가 기준)</h4>
+  <div class="table-wrapper">
+    <table class="sell-table">
+      <thead><tr><th>단계</th><th>비중</th><th>제안 매도가</th><th>현재가 대비</th><th>근거</th></tr></thead>
+      <tbody>
+        <tr><td>1차</td><td>30%</td><td>413,000원</td><td>+40.9%</td><td>컨센서스 목표가(457,917원) 90% 수준 / 단기 저항 돌파</td></tr>
+        <tr><td>2차</td><td>30%</td><td>457,000원</td><td>+55.9%</td><td>컨센서스 목표가 근처</td></tr>
+        <tr><td>3차</td><td>30%</td><td>494,000원</td><td>+68.6%</td><td>목표가 108% 상회 돌파 / Nomura 목표가(570,000원) 방향</td></tr>
+        <tr><td>잔여</td><td>10%</td><td>추세 추종</td><td>-</td><td>상승 추세 지속 시 보유 / 500,000원 돌파 여부 모니터링</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4 style="margin:14px 0 4px;color:#1565c0;font-size:14px;">📈 분할 매수 제안 (지지선 기준)</h4>
+  <div class="table-wrapper">
+    <table class="buy-table">
+      <thead><tr><th>단계</th><th>비중</th><th>제안 매수가</th><th>현재가 대비</th><th>근거</th></tr></thead>
+      <tbody>
+        <tr><td>1차</td><td>30%</td><td>280,000원</td><td>-4.4%</td><td>단기 1차 지지선 / 직전 저항→지지 전환 구간</td></tr>
+        <tr><td>2차</td><td>30%</td><td>265,000원</td><td>-9.6%</td><td>20일 이동평균선 / 중기 지지선</td></tr>
+        <tr><td>3차</td><td>30%</td><td>248,000원</td><td>-15.4%</td><td>60일 이동평균선 / 강력 지지선 / 과매도 구간</td></tr>
+        <tr><td>잔여</td><td>10%</td><td>현금 여력</td><td>-</td><td>추가 하락 대비 현금 대기 / 230,000원 하회 시 적극 매수 검토</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:11px;color:#aaa;">※ 분할매도·매수 모두 기계적 참고 제안이며 투자 권유가 아닙니다.</p>
+
+  <h4 style="margin:16px 0 4px;color:#1a237e;">💬 종합 투자의견 (재무지표 반영)</h4>
+  <p style="line-height:1.8;font-size:14px;color:#333;">
+    삼성전자는 2Q26 영업이익 <b>89.4조원(역대 최대)</b>으로 엔비디아 분기 이익까지 추월하며 AI 반도체 슈퍼사이클의 핵심 수혜주임을 입증했다. ROE 52.6%, 영업이익률 52.1%는 역대 최고 수준이며, <b>PER 7~8배</b>는 이러한 압도적 성장성 대비 현저히 저평가된 상태다. 순부채비율 -17.9%(순현금)로 재무건전성도 최우수 수준. HBM4 완판 및 이재용-젠슨황 협력 확대 기대감까지 겹쳐 중장기 상승 여력이 충분하다. <span class="badge-buy">매수 유지</span>
+  </p>
+</div>
+
+<!-- ===== SK하이닉스 ===== -->
+<div class="stock-card">
+  <h2>SK하이닉스 <span style="font-size:14px;color:#888;">(000660.KS)</span></h2>
+  <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start;">
+    <div>
+      <div class="price" style="color:#1565c0;">2,190,000원*</div>
+      <div style="font-size:14px;color:#888;">* 추정치 (7/10 외국인 대규모 매도 영향)</div>
+      <div style="color:#888;font-size:13px;margin-top:4px;">기준: 2026-07-10 종가</div>
+    </div>
+    <div style="font-size:13px;color:#444;line-height:1.8;">
+      <div>📊 거래량: 대량 (나스닥 상장 이슈)</div>
+      <div>📍 52주 고가: <b>2,305,000원</b> / 저가: 약 <b>1,380,000원</b></div>
+      <div>📍 현재가/52주 고가 위치: <b>95.0%</b> (고점 근접)</div>
+      <div>🏳 외국인: 대규모 순매도 약 1.7조원 (나스닥 상장 차익실현)</div>
+      <div>🏳 기관: 엇갈림</div>
+    </div>
+    <div>
+      <span class="opinion" style="background:#e8f5e9;color:#2e7d32;">강력 매수 (Strong BUY)</span><br>
+      <span style="font-size:13px;color:#888;">iM증권 목표가: <b>3,500,000원</b> (상향)</span><br>
+      <span style="font-size:12px;color:#888;">나스닥 ADR(SKHY) 공모가: $149</span>
+    </div>
+  </div>
+
+  <h4 style="margin:16px 0 4px;color:#1a237e;">📰 최근 주요 뉴스·공시</h4>
+  <ul class="news-list">
+    <li>7/10 나스닥 상장 완료 (티커: SKHY, ADR 공모가 1주당 $149) — 글로벌 투자자 접근성 확대, 가치 재평가 기대</li>
+    <li>2Q26 실적 발표 (7/10): 매출 <b>83조원</b>, 영업이익 <b>64조원</b> (<b>YoY +650%</b>) — DRAM 영업이익률 78% 업계 최고</li>
+    <li>LPDDR5X 기반 SOCAMM2 192GB 제품 양산 착수, HBM4 공급 확대 — 엔비디아 베라 루빈 플랫폼 최적화</li>
+    <li>iM증권, 목표주가 2,760,000원 → 3,500,000원으로 대폭 상향 (P/B 7.5배 적용)</li>
+    <li>7/7 주가 -5.93% 급락 후 7/10 외국인 차익실현 매도 — 나스닥 상장 관련 수급 재편 과정</li>
+  </ul>
+
+  <h4 style="margin:16px 0 4px;color:#1a237e;">⭐ 핵심 재무지표 (2026 2Q 기준)</h4>
+  <div class="table-wrapper">
+    <table class="fin-table">
+      <thead>
+        <tr><th>ROE</th><th>PER</th><th>영업이익률(추세)</th><th>부채비율</th><th>매출/영업이익 성장률(YoY)</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>95~96% 🔥<br><span style="font-size:11px;color:#2e7d32;">비정상적 고점 (메모리 초황기)</span></td>
+          <td>4.1배<br><span style="font-size:11px;color:#2e7d32;">동종업 최저 (현저 저평가)</span></td>
+          <td>78% (DRAM) ↗↗<br><span style="font-size:11px;color:#2e7d32;">업계 최고 수준</span></td>
+          <td>양호<br><span style="font-size:11px;color:#888;">정확 수치 미확인</span></td>
+          <td>매출+대폭/영업이익 +650% YoY<br><span style="font-size:11px;color:#2e7d32;">2Q26 OP 64조원</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4 style="margin:14px 0 4px;color:#1565c0;">🔬 기술적 분석</h4>
+  <div class="tech-grid">
+    <div class="tech-item"><div class="tech-label">5일 이동평균선</div><div class="tech-value">약 2,180,000원</div></div>
+    <div class="tech-item"><div class="tech-label">20일 이동평균선</div><div class="tech-value">약 2,100,000원</div></div>
+    <div class="tech-item"><div class="tech-label">60일 이동평균선</div><div class="tech-value">약 1,900,000원</div></div>
+    <div class="tech-item"><div class="tech-label">RSI</div><div class="tech-value">55 (중립)</div></div>
+    <div class="tech-item"><div class="tech-label">MACD</div><div class="tech-value">횡보 / 변동성 구간</div></div>
+    <div class="tech-item"><div class="tech-label">주요 지지선</div><div class="tech-value">2,150,000 / 2,100,000 / 1,900,000원</div></div>
+    <div class="tech-item"><div class="tech-label">주요 저항선</div><div class="tech-value">2,250,000 / 2,305,000 (52주 고가) / 2,500,000원</div></div>
+    <div class="tech-item"><div class="tech-label">현재 위치 평가</div><div class="tech-value">52주 고점 근접, 단기 매물 소화 중</div></div>
+  </div>
+
+  <h4 style="margin:14px 0 4px;color:#c2410c;font-size:14px;">📉 분할 매도 제안 (목표가 기준)</h4>
+  <div class="table-wrapper">
+    <table class="sell-table">
+      <thead><tr><th>단계</th><th>비중</th><th>제안 매도가</th><th>현재가 대비</th><th>근거</th></tr></thead>
+      <tbody>
+        <tr><td>1차</td><td>30%</td><td>3,150,000원</td><td>+43.8%</td><td>iM증권 목표가(3,500,000원) 90% / 단기 저항선</td></tr>
+        <tr><td>2차</td><td>30%</td><td>3,500,000원</td><td>+59.8%</td><td>iM증권 목표주가 근처</td></tr>
+        <tr><td>3차</td><td>30%</td><td>3,780,000원</td><td>+72.6%</td><td>목표가 108% 상회 돌파</td></tr>
+        <tr><td>잔여</td><td>10%</td><td>추세 추종</td><td>-</td><td>나스닥 글로벌 피어 가치 재평가 방향 추종</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4 style="margin:14px 0 4px;color:#1565c0;font-size:14px;">📈 분할 매수 제안 (지지선 기준)</h4>
+  <div class="table-wrapper">
+    <table class="buy-table">
+      <thead><tr><th>단계</th><th>비중</th><th>제안 매수가</th><th>현재가 대비</th><th>근거</th></tr></thead>
+      <tbody>
+        <tr><td>1차</td><td>30%</td><td>2,120,000원</td><td>-3.2%</td><td>단기 1차 지지선 / 5일선 부근</td></tr>
+        <tr><td>2차</td><td>30%</td><td>2,000,000원</td><td>-8.7%</td><td>20일 이동평균선 / 심리적 지지 200만원</td></tr>
+        <tr><td>3차</td><td>30%</td><td>1,860,000원</td><td>-15.1%</td><td>60일 이동평균선 부근 / 강력 지지구간</td></tr>
+        <tr><td>잔여</td><td>10%</td><td>현금 여력</td><td>-</td><td>추가 하락 대비 대기 / 1,800,000원 하회 시 비중 확대 검토</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:11px;color:#aaa;">※ 분할매도·매수 모두 기계적 참고 제안이며 투자 권유가 아닙니다.</p>
+
+  <h4 style="margin:16px 0 4px;color:#1a237e;">💬 종합 투자의견 (재무지표 반영)</h4>
+  <p style="line-height:1.8;font-size:14px;color:#333;">
+    SK하이닉스는 2Q26 영업이익 64조원(+650% YoY)이라는 경이로운 성장으로 AI 반도체 최대 수혜주임을 재입증했다. <b>PER 4.1배</b>는 이 폭발적 성장세 대비 극히 저평가 상태이며, ROE 95%, 영업이익률 78%는 업계 최고 수준. 7/10 나스닥 상장(SKHY)은 글로벌 피어(마이크론 등) 대비 밸류에이션 재평가를 촉진하는 강력한 촉매제다. 단기 외국인 차익실현 매도 압력은 수급 과도기로 해석하며, 중장기 매수 관점 유지 권고. <span class="badge-buy">강력 매수</span>
+  </p>
+</div>
+
+<!-- ====== ETF 섹션 ====== -->
+<h3>📦 ETF 상세 분석</h3>
+
+<!-- ===== RISE AI밸류체인 490590 ===== -->
+<div class="etf-card">
+  <h2>RISE 미국AI밸류체인데일리고정커버드콜 <span style="font-size:14px;color:#888;">(490590.KS)</span></h2>
+  <p style="font-size:12px;color:#0288d1;margin:0 0 12px;">운용사: KB자산운용 | 추적지수: 미국 AI 가치사슬 핵심 15개사 (커버드콜 10% 전략 적용)</p>
+  <div style="display:flex;flex-wrap:wrap;gap:20px;">
+    <div>
+      <div class="price" style="color:#0288d1;">15,630원</div>
+      <div style="font-size:13px;color:#888;">NAV 기준가 (2026-07-10)</div>
+    </div>
+    <div style="font-size:13px;color:#444;line-height:2;">
+      <div>📊 1개월 수익률: <b style="color:#c62828;">-5.6%</b></div>
+      <div>📊 3개월 수익률: 데이터 없음</div>
+      <div>📊 괴리율: ≈ ±0.2% (추정)</div>
+      <div>💰 분배 주기: <b>월 1회 (월배당)</b></div>
+    </div>
+    <div>
+      <span class="badge-hold">중립</span>
+      <div style="font-size:12px;color:#888;margin-top:6px;">커버드콜 구조 → 상승 참여 90%</div>
+    </div>
+  </div>
+
+  <h4 style="margin:14px 0 4px;color:#0288d1;">구성종목 Top 5 (추정)</h4>
+  <div class="table-wrapper">
+    <table>
+      <thead><tr><th>#</th><th>종목명</th><th>비고</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>NVIDIA (NVDA)</td><td>AI GPU 1위, HBM 핵심 고객</td></tr>
+        <tr><td>2</td><td>Microsoft (MSFT)</td><td>Azure AI 클라우드 확장</td></tr>
+        <tr><td>3</td><td>Alphabet (GOOG)</td><td>Google AI / TPU 자체 개발</td></tr>
+        <tr><td>4</td><td>Meta Platforms (META)</td><td>오픈소스 AI Llama 확산</td></tr>
+        <tr><td>5</td><td>Amazon (AMZN)</td><td>AWS AI 인프라, Trainium 칩</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4 style="margin:14px 0 4px;color:#c2410c;font-size:14px;">📉 분할 매도 제안 (기술적 저항선 기준)</h4>
+  <div class="table-wrapper">
+    <table class="sell-table">
+      <thead><tr><th>단계</th><th>비중</th><th>제안 매도가</th><th>현재가 대비</th><th>근거</th></tr></thead>
+      <tbody>
+        <tr><td>1차</td><td>30%</td><td>16,800원</td><td>+7.5%</td><td>단기 저항선 / 52주 신고가 90% 수준</td></tr>
+        <tr><td>2차</td><td>30%</td><td>17,500원</td><td>+12.0%</td><td>추정 52주 신고가 근처</td></tr>
+        <tr><td>3차</td><td>30%</td><td>18,200원</td><td>+16.4%</td><td>신고가 상회 돌파 / NAV 확인 후 판단</td></tr>
+        <tr><td>잔여</td><td>10%</td><td>추세 추종</td><td>-</td><td>월배당 수취 지속 목적으로 장기 보유</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4 style="margin:14px 0 4px;color:#1565c0;font-size:14px;">📈 분할 매수 제안 (지지선 기준)</h4>
+  <div class="table-wrapper">
+    <table class="buy-table">
+      <thead><tr><th>단계</th><th>비중</th><th>제안 매수가</th><th>현재가 대비</th><th>근거</th></tr></thead>
+      <tbody>
+        <tr><td>1차</td><td>30%</td><td>15,200원</td><td>-2.7%</td><td>현재가 부근 / 단기 1차 지지 NAV 레벨</td></tr>
+        <tr><td>2차</td><td>30%</td><td>14,500원</td><td>-7.2%</td><td>중기 지지선 / 최근 저점 부근</td></tr>
+        <tr><td>3차</td><td>30%</td><td>13,300원</td><td>-14.9%</td><td>강력 지지 / 과매도 구간 / 월배당 수익률 매력 극대화</td></tr>
+        <tr><td>잔여</td><td>10%</td><td>현금 여력</td><td>-</td><td>추가 하락 대비 현금 대기</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:11px;color:#aaa;">※ 분할매도·매수 모두 기계적 참고 제안이며 투자 권유가 아닙니다.</p>
+  <p style="font-size:13px;line-height:1.7;color:#333;margin-top:10px;">
+    <b>투자의견:</b> 커버드콜 전략으로 상방 참여 90% + 월배당 수익 특성. 1개월 -5.6%로 단기 부진하나 AI 밸류체인 장기 성장 동력은 유효. 급등장보다 횡보·완만한 상승장에서 유리한 구조. 월배당 수익 선호 투자자에 적합. <span class="badge-hold">중립</span>
+  </p>
+</div>
+
+<!-- ===== SOL 양자컴퓨팅 ===== -->
+<div class="etf-card">
+  <h2>SOL 미국양자컴퓨팅TOP10 <span style="font-size:14px;color:#888;">(0023A0.KS)</span></h2>
+  <p style="font-size:12px;color:#0288d1;margin:0 0 12px;">운용사: 신한자산운용 | 추적지수: KEDI 미국양자컴퓨팅TOP10 (PR) — 미국 양자컴퓨팅 핵심 10개사</p>
+  <p style="font-size:12px;color:#e65100;background:#fff3e0;padding:6px 10px;border-radius:6px;display:inline-block;">⚠️ 지시서 상 ticker(396500) 정정: 실제 SOL 미국양자컴퓨팅TOP10 = 0023A0 / 396500 = TIGER 반도체TOP10 (Mirae Asset)</p>
+
+  <div style="display:flex;flex-wrap:wrap;gap:20px;margin-top:12px;">
+    <div style="font-size:13px;color:#444;line-height:2;">
+      <div>💰 종가/NAV: <b>데이터 없음</b> (7/10 기준)</div>
+      <div>📊 1개월 수익률: 데이터 없음</div>
+      <div>📊 특성: 고변동성 테마 ETF</div>
+    </div>
+    <div><span class="badge-hold">중립</span></div>
+  </div>
+
+  <h4 style="margin:14px 0 4px;color:#0288d1;">구성종목 Top 5 (추정)</h4>
+  <div class="table-wrapper">
+    <table>
+      <thead><tr><th>#</th><th>종목명</th><th>비고</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>IonQ (IONQ)</td><td>양자컴퓨팅 전문 상장 1위</td></tr>
+        <tr><td>2</td><td>Rigetti Computing (RGTI)</td><td>슈퍼컨덕팅 양자 프로세서</td></tr>
+        <tr><td>3</td><td>D-Wave Quantum (QBTS)</td><td>양자 어닐링 특화</td></tr>
+        <tr><td>4</td><td>IBM (IBM)</td><td>IBM Quantum Network 운영</td></tr>
+        <tr><td>5</td><td>Alphabet (GOOG)</td><td>Willow 양자칩 세계 최초 공개</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4 style="margin:14px 0 4px;color:#c2410c;font-size:14px;">📉 분할 매도 제안 (기술적 저항선 기준)</h4>
+  <div class="table-wrapper">
+    <table class="sell-table">
+      <thead><tr><th>단계</th><th>비중</th><th>제안 매도가</th><th>현재가 대비</th><th>근거</th></tr></thead>
+      <tbody>
+        <tr><td>1차</td><td>30%</td><td>매수가 +8%</td><td>+8%</td><td>단기 저항선 / 양자컴퓨팅 뉴스 모멘텀 반영 후</td></tr>
+        <tr><td>2차</td><td>30%</td><td>매수가 +15%</td><td>+15%</td><td>중기 목표 / 52주 신고가 근처</td></tr>
+        <tr><td>3차</td><td>30%</td><td>매수가 +25%</td><td>+25%</td><td>신고가 돌파 시</td></tr>
+        <tr><td>잔여</td><td>10%</td><td>추세 추종</td><td>-</td><td>양자컴퓨팅 기술 상용화 이벤트 모멘텀</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4 style="margin:14px 0 4px;color:#1565c0;font-size:14px;">📈 분할 매수 제안 (지지선 기준)</h4>
+  <div class="table-wrapper">
+    <table class="buy-table">
+      <thead><tr><th>단계</th><th>비중</th><th>제안 매수가</th><th>현재가 대비</th><th>근거</th></tr></thead>
+      <tbody>
+        <tr><td>1차</td><td>30%</td><td>현재가 부근</td><td>-3%</td><td>현재 NAV 레벨 / 테마 관심 진입</td></tr>
+        <tr><td>2차</td><td>30%</td><td>현재가 -10%</td><td>-10%</td><td>중기 지지선 / 과매도 구간</td></tr>
+        <tr><td>3차</td><td>30%</td><td>현재가 -18%</td><td>-18%</td><td>강력 지지 / 52주 저가 부근</td></tr>
+        <tr><td>잔여</td><td>10%</td><td>현금 여력</td><td>-</td><td>추가 하락 대비</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:11px;color:#aaa;">※ 분할매도·매수 모두 기계적 참고 제안이며 투자 권유가 아닙니다.</p>
+  <p style="font-size:13px;line-height:1.7;color:#333;margin-top:10px;">
+    <b>투자의견:</b> 양자컴퓨팅은 10년 이상 장기 성장 테마이나 현재 상용화 단계는 초기. 단기 변동성이 매우 크므로 포트폴리오 내 소규모(5% 이내) 분산 투자 권고. 뉴스·이벤트 기반 급등 시 분할 매도 원칙 준수 필요. <span class="badge-hold">중립 (장기 테마)</span>
+  </p>
+</div>
+
+<!-- ===== TIGER 반도체TOP10 ===== -->
+<div class="etf-card">
+  <h2>TIGER 반도체TOP10 <span style="font-size:14px;color:#888;">(396500.KS)</span></h2>
+  <p style="font-size:12px;color:#0288d1;margin:0 0 12px;">운용사: 미래에셋자산운용 | 추적지수: FnGuide 반도체TOP10 지수 | 총보수: 0.50%</p>
+  <p style="font-size:12px;color:#e65100;background:#fff3e0;padding:6px 10px;border-radius:6px;display:inline-block;">⚠️ 지시서 상 ticker(0023A0) 정정: 실제 TIGER 반도체TOP10 = 396500 (미래에셋)</p>
+
+  <div style="display:flex;flex-wrap:wrap;gap:20px;margin-top:12px;">
+    <div style="font-size:13px;color:#444;line-height:2;">
+      <div>💰 종가/NAV: <b>데이터 없음</b> (7/10 기준)</div>
+      <div>📊 추정 등락률: <b>+5~8%</b> (삼성전자 +5.4%, KOSDAQ +5.47% 감안)</div>
+      <div>📊 연간 분배율: <b>약 0.15%</b></div>
+    </div>
+    <div><span class="badge-buy">매수</span></div>
+  </div>
+
+  <h4 style="margin:14px 0 4px;color:#0288d1;">구성종목 Top 5 (추정)</h4>
+  <div class="table-wrapper">
+    <table>
+      <thead><tr><th>#</th><th>종목명</th><th>비고</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>삼성전자 (005930)</td><td>HBM4 완판, 2Q26 OP 89.4조</td></tr>
+        <tr><td>2</td><td>SK하이닉스 (000660)</td><td>DRAM 78% 영업이익률</td></tr>
+        <tr><td>3</td><td>한미반도체 (042700)</td><td>HBM TC본더 독점</td></tr>
+        <tr><td>4</td><td>리노공업 (058470)</td><td>IC 테스트 소켓 AI/ASIC 수혜</td></tr>
+        <tr><td>5</td><td>DB하이텍 (000990)</td><td>파운드리 AI 전력반도체</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4 style="margin:14px 0 4px;color:#c2410c;font-size:14px;">📉 분할 매도 제안 (기술적 저항선 기준)</h4>
+  <div class="table-wrapper">
+    <table class="sell-table">
+      <thead><tr><th>단계</th><th>비중</th><th>제안 매도가</th><th>현재가 대비</th><th>근거</th></tr></thead>
+      <tbody>
+        <tr><td>1차</td><td>30%</td><td>매수가 +10%</td><td>+10%</td><td>단기 저항선 / 반도체 지수 신고가 근처</td></tr>
+        <tr><td>2차</td><td>30%</td><td>매수가 +20%</td><td>+20%</td><td>중기 목표 / 지수 52주 신고가 돌파</td></tr>
+        <tr><td>3차</td><td>30%</td><td>매수가 +30%</td><td>+30%</td><td>목표가 상회 / 추세 강화 시</td></tr>
+        <tr><td>잔여</td><td>10%</td><td>추세 추종</td><td>-</td><td>반도체 사이클 지속 모니터링</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4 style="margin:14px 0 4px;color:#1565c0;font-size:14px;">📈 분할 매수 제안 (지지선 기준)</h4>
+  <div class="table-wrapper">
+    <table class="buy-table">
+      <thead><tr><th>단계</th><th>비중</th><th>제안 매수가</th><th>현재가 대비</th><th>근거</th></tr></thead>
+      <tbody>
+        <tr><td>1차</td><td>30%</td><td>현재가 부근</td><td>-3%</td><td>단기 1차 지지 / 급등 후 단기 조정 구간 진입</td></tr>
+        <tr><td>2차</td><td>30%</td><td>현재가 -8%</td><td>-8%</td><td>20일선 / 중기 지지선</td></tr>
+        <tr><td>3차</td><td>30%</td><td>현재가 -15%</td><td>-15%</td><td>60일선 / 강력 지지 / 과매도 구간</td></tr>
+        <tr><td>잔여</td><td>10%</td><td>현금 여력</td><td>-</td><td>추가 하락 대비 현금 대기</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:11px;color:#aaa;">※ 분할매도·매수 모두 기계적 참고 제안이며 투자 권유가 아닙니다.</p>
+  <p style="font-size:13px;line-height:1.7;color:#333;margin-top:10px;">
+    <b>투자의견:</b> 국내 반도체 슈퍼사이클 최전방 수혜 ETF. 삼성전자·SK하이닉스 실적 쇼크에 직접 연동되는 구조로 7/10 대폭 상승 예상. 총보수 0.5%로 다소 높지만 반도체 대장주 집중투자 효과. 반도체 사이클 피크 우려가 나타날 때까지 보유 권고. <span class="badge-buy">매수</span>
+  </p>
+</div>
+
+<!-- ===== TIGER SK하이닉스레버리지 ===== -->
+<div class="etf-card">
+  <h2>TIGER SK하이닉스단일종목레버리지 <span style="font-size:14px;color:#888;">(0195S0.KS)</span></h2>
+  <p style="font-size:12px;color:#0288d1;margin:0 0 12px;">운용사: 미래에셋자산운용 | 추적: KRX SK하이닉스 지수 일일 수익률 ×2배 | 총보수: 0.09%</p>
+
+  <div style="display:flex;flex-wrap:wrap;gap:20px;margin-top:12px;">
+    <div style="font-size:13px;color:#444;line-height:2;">
+      <div>💰 종가/NAV: <b>데이터 없음</b> (7/10 기준)</div>
+      <div>📊 SK하이닉스 대비 약 2배 등락 구조</div>
+      <div>📊 분배금: <b>0원</b> (연간 분배율 0%)</div>
+      <div>⚠️ 고위험 상품 — 장기 보유 시 변동성 복리 손실 가능</div>
+    </div>
+    <div><span class="badge-caution">적극매수 (고위험)</span></div>
+  </div>
+
+  <h4 style="margin:14px 0 4px;color:#0288d1;">추적 지수 구조</h4>
+  <p style="font-size:13px;color:#444;">SK하이닉스(000660) 단일 종목 일간 수익률 ×2 레버리지. SK하이닉스가 +1% 움직이면 이 ETF는 약 +2%, -1% 움직이면 약 -2%. 장기 보유 시 변동성 복리(volatility drag) 주의.</p>
+
+  <h4 style="margin:14px 0 4px;color:#c2410c;font-size:14px;">📉 분할 매도 제안 (기술적 저항선 기준)</h4>
+  <div class="table-wrapper">
+    <table class="sell-table">
+      <thead><tr><th>단계</th><th>비중</th><th>제안 매도가</th><th>현재가 대비</th><th>근거</th></tr></thead>
+      <tbody>
+        <tr><td>1차</td><td>30%</td><td>매수가 +15%</td><td>+15%</td><td>SK하이닉스 +7.5% 도달 시 / 단기 저항 상당</td></tr>
+        <tr><td>2차</td><td>30%</td><td>매수가 +30%</td><td>+30%</td><td>SK하이닉스 +15% 도달 시 / 목표가 90% 수준</td></tr>
+        <tr><td>3차</td><td>30%</td><td>매수가 +50%</td><td>+50%</td><td>SK하이닉스 +25% 도달 시 / 레버리지 수익 극대화 구간</td></tr>
+        <tr><td>잔여</td><td>10%</td><td>추세 추종</td><td>-</td><td>단, 레버리지 특성상 장기 보유 위험 → 이익실현 빠르게</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4 style="margin:14px 0 4px;color:#1565c0;font-size:14px;">📈 분할 매수 제안 (지지선 기준)</h4>
+  <div class="table-wrapper">
+    <table class="buy-table">
+      <thead><tr><th>단계</th><th>비중</th><th>제안 매수가</th><th>현재가 대비</th><th>근거</th></tr></thead>
+      <tbody>
+        <tr><td>1차</td><td>30%</td><td>현재가 -5%</td><td>-5%</td><td>SK하이닉스 -2.5% 하락 시 / 단기 지지 진입</td></tr>
+        <tr><td>2차</td><td>30%</td><td>현재가 -15%</td><td>-15%</td><td>SK하이닉스 -7.5% 하락 / 중기 지지선</td></tr>
+        <tr><td>3차</td><td>30%</td><td>현재가 -25%</td><td>-25%</td><td>SK하이닉스 -12.5% 하락 / 강력 과매도 구간</td></tr>
+        <tr><td>잔여</td><td>10%</td><td>현금 여력</td><td>-</td><td>추가 하락 대비 — 레버리지 특성상 빠른 대응 중요</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:11px;color:#aaa;">※ 분할매도·매수 모두 기계적 참고 제안이며 투자 권유가 아닙니다. 레버리지 ETF 특성상 손실 위험이 크며 단기 트레이딩 목적 상품입니다.</p>
+  <p style="font-size:13px;line-height:1.7;color:#333;margin-top:10px;">
+    <b>투자의견:</b> SK하이닉스 중장기 상승 추세가 명확한 현 국면에서 공격적 수익 추구 가능. 단, 레버리지 특성상 단기 변동성 리스크 매우 크고 장기 보유에 부적합. 투자비중 전체 포트폴리오의 5~10% 이내 권고. <span class="badge-caution">적극매수 (고위험, 소액 한정)</span>
+  </p>
+</div>
+
+<!-- ====== GEMINI AI 종합 의견 ====== -->
+<section class="gemini-section">
+  <h2>🔮 Gemini AI 종합 의견 (gemini-2.5-flash)</h2>
+  <div class="gemini-content">
+    <p><b>2026년 7월 2주차 주간 투자 의견: AI 반도체 주도의 황금기, 거시 경제 지표 주시</b></p>
+
+    <p><b>[1. 시장 전반 평가: 반도체 랠리 주도, 국내 증시 아웃퍼폼]</b><br>
+    2026년 7월 10일 KOSPI는 2.52%, KOSDAQ은 무려 5.47% 상승하며 글로벌 증시 대비 뚜렷한 아웃퍼폼을 기록했습니다. S&P500과 나스닥도 각각 0.42%, 0.29% 상승하며 견조한 흐름을 보였으나, 국내 증시의 상승폭은 단연 돋보였습니다. 이는 인공지능(AI) 혁명의 핵심 동력인 고대역폭 메모리(HBM)를 위시한 반도체 섹터의 폭발적인 성장이 국내 증시를 강력하게 견인하고 있음을 시사합니다. 원달러 환율 1,500원 수준은 수출 중심 반도체 기업에 환율 효과로 작용하며, 미국채 10년물 4.56%의 고금리 환경에도 기업 펀더멘털이 이를 상쇄하고 있습니다.</p>
+
+    <p><b>[2. 개별 종목별 의견]</b><br>
+    <b>삼성전자 (매수):</b> 2Q26 영업이익 89.4조원이라는 역대 최대 실적과 HBM4 완판 소식은 삼성전자가 단순 메모리 공급자를 넘어 AI 시대의 핵심 솔루션 제공자로 확고히 자리매김했음을 보여줍니다. ROE 52.6%, 영업이익률 52.1%는 압도적인 수익성을 나타내며, PER 7~8배는 이러한 고성장세를 감안할 때 여전히 매력적인 밸류에이션입니다. 순부채비율 -17.9%의 순현금 상태는 재무 안정성 최우수 수준이며, 이재용-젠슨 황 미팅은 추가 성장 동력 기대감을 높입니다. <b>중장기 매수 강력 권고.</b></p>
+
+    <p><b>SK하이닉스 (강력 매수):</b> 2Q26 영업이익 64조원(+650% YoY)이라는 경이로운 성장과 나스닥 상장(SKHY)은 SK하이닉스의 가치를 글로벌 수준에서 재평가받을 강력한 촉매가 됩니다. ROE 95%, PER 4.1배는 현저한 저평가를 나타내며, DRAM 영업이익률 78%는 업계 최고 수준입니다. 나스닥 상장을 통한 글로벌 피어 대비 밸류에이션 재평가가 이루어질 경우 추가 상승 여력이 매우 큽니다. 단기 외국인 매도는 수급 과도기로 판단하며 <b>강력 매수 유지.</b></p>
+
+    <p><b>[3. 이번주 일정 영향]</b><br>
+    7월 14일 미국 CPI 발표가 가장 중요한 이벤트입니다. 예상치를 상회하는 물가 지표는 금리 인상 우려 재점화로 글로벌 증시에 단기 부담을 줄 수 있습니다. 7월 16일 한국은행 금통위는 국내 유동성과 환율에 영향을 미칩니다. 현재 시장은 금리보다 반도체 기업 실적 모멘텀에 주목하는 국면으로, 이번 주 지표들이 예상 내에서 발표될 경우 반도체 강세 흐름이 이어질 가능성이 높습니다.</p>
+
+    <p><b>[4. 이번주 투자 전략 요약]</b><br>
+    ① AI 반도체 섹터(삼성전자·SK하이닉스·TIGER 반도체TOP10) 비중 확대 유지 — 구조적 성장 사이클 진행 중<br>
+    ② CPI·금통위 발표 전 일부 차익실현 후 결과에 따라 재진입 고려<br>
+    ③ SK하이닉스 외국인 매도 일단락 시점을 분할 매수 기회로 활용<br>
+    ④ RISE AI밸류체인 월배당 수취 전략 지속 — 분배락일(7월 말 예정) 전 확인<br>
+    ⑤ 레버리지 ETF(0195S0)는 소규모 단기 포지션 유지, 이익 시 빠른 실현</p>
+  </div>
+</section>
+
+<!-- ====== AI 추천 종목 ====== -->
+<section class="recommend-section">
+  <h2>🤖 AI 추천 종목 — 이번 주 주목할 종목 (2026-07-12 기준)</h2>
+  <p style="color:#888;font-size:13px;">최근 1주일 모멘텀, 거래량, 뉴스, 애널리스트 의견을 종합한 동적 추천 종목입니다. 고정 분석 6개 종목 제외, 시총 1,000억원 이상, 테마주 제외.</p>
+
+  <div class="recommend-card">
+    <b>1. 리노공업 (058470) — KOSDAQ</b>
+    <div style="margin:6px 0;font-size:14px;color:#444;">
+      IC 테스트 소켓 전문 — AI 추론·ASIC 수요 폭발로 반도체 검사용 소켓 수요 급증. 키움증권 목표가 <b>12만원</b>으로 상향 (기존 8만원). 삼성전자·SK하이닉스 HBM4 양산 확대 직접 수혜.
+    </div>
+    <span class="reason-tag">AI ASIC 수혜</span>
+    <span class="reason-tag">목표가 대폭 상향</span>
+    <span class="reason-tag">거래량 급증</span>
+    <span class="reason-tag">영업이익 개선</span>
+    <div class="data-source">출처: 키움증권 리포트 / 네이버금융</div>
+  </div>
+
+  <div class="recommend-card">
+    <b>2. 아이에스티이 (ISTTI) — KOSDAQ</b>
+    <div style="margin:6px 0;font-size:14px;color:#444;">
+      반도체 FOUP(Front Opening Unified Pod) 세정장비 전문. HBM4 등 첨단 반도체 공정에서 FOUP 세정 필수 공정화 → 삼성·SK하이닉스 라인 증설에 따른 장비 발주 수혜. AI 반도체 공정 고도화로 성장 가시성 높음.
+    </div>
+    <span class="reason-tag">HBM 공정 필수 장비</span>
+    <span class="reason-tag">발주 확대</span>
+    <span class="reason-tag">수급 개선</span>
+    <div class="data-source">출처: 반도체 산업 뉴스 / 2026-07-10 공시</div>
+  </div>
+
+  <div class="recommend-card">
+    <b>3. 한미반도체 (042700) — KOSPI</b>
+    <div style="margin:6px 0;font-size:14px;color:#444;">
+      HBM용 TC(Thermal Compression) 본더 독점 공급. SK하이닉스 HBM4 양산 가속화로 장비 수주 확대 기대. 삼성전자 HBM4 공급 시작과 함께 이중 수혜 구조. 국내 반도체 장비주 중 가장 직접적인 HBM 수혜.
+    </div>
+    <span class="reason-tag">HBM TC본더 독점</span>
+    <span class="reason-tag">이중 수혜(삼성+SKH)</span>
+    <span class="reason-tag">수주 모멘텀</span>
+    <div class="data-source">출처: 반도체 업계 공시 / FnGuide</div>
+  </div>
+
+  <div class="recommend-card">
+    <b>4. 에스티팜 (237690) — KOSDAQ</b>
+    <div style="margin:6px 0;font-size:14px;color:#444;">
+      글로벌 RNA 치료제(mRNA, siRNA, ASO) 원료의약품(올리고뉴클레오타이드) 전문. 글로벌 기술이전 계약 확대 및 RNA 치료제 시장 고성장으로 장기 모멘텀 견고. AI 테마와 달리 바이오 방어적 성격.
+    </div>
+    <span class="reason-tag">RNA 치료제 성장</span>
+    <span class="reason-tag">글로벌 기술이전</span>
+    <span class="reason-tag">포트폴리오 분산</span>
+    <div class="data-source">출처: 바이오/제약 업계 리포트</div>
+  </div>
+
+  <div class="recommend-card">
+    <b>5. 클래시스 (214150) — KOSDAQ</b>
+    <div style="margin:6px 0;font-size:14px;color:#444;">
+      피부미용 에너지 기반 의료기기 글로벌 1위(볼뉴머·소프웨이브 계열). 미국·중동·아시아 수출 확대로 실적 우상향 추세. 반도체 섹터 쏠림 장세에서 바이오/의료기기 분산 투자처로 적합. 안정적 이익 성장.
+    </div>
+    <span class="reason-tag">글로벌 수출 확대</span>
+    <span class="reason-tag">실적 우상향</span>
+    <span class="reason-tag">섹터 분산</span>
+    <div class="data-source">출처: IBK투자증권 / 네이버금융</div>
+  </div>
+</section>
+
+<div class="footer">
+  <p>본 리포트는 AI가 수집·생성한 참고용 자료이며 투자 권유가 아닙니다.</p>
+  <p>생성 시각: 2026-07-12 KST | 분석 기준: 2026-07-10 종가</p>
+  <p>데이터 출처: 네이버금융, Investing.com, Yahoo Finance, 미래에셋·신한·KB 자산운용, FnGuide, KRX, Bloomberg, CNBC, 각종 증권사 리포트</p>
+</div>
+
+</body>
+</html>
