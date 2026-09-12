@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ETF 포트폴리오 분석 리포트 B 2026-09-13</title>
+  <style>
+    body { font-family: 'Malgun Gothic', sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: #f5f7fa; color: #222; }
+    h1 { color: #00695c; border-bottom: 3px solid #00695c; padding-bottom: 10px; }
+    h2 { color: #00796b; }
+    h3 { color: #0288d1; border-left: 4px solid #0288d1; padding-left: 10px; margin-top: 40px; }
+    .overall-summary { background: white; border-radius: 12px; padding: 24px; margin: 20px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.10); border-left: 6px solid #00695c; }
+    .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; margin-top: 12px; }
+    .summary-table { min-width: 560px; border-collapse: collapse; width: 100%; }
+    .summary-table th { background: #00695c; color: white; padding: 10px 12px; text-align: left; white-space: nowrap; }
+    .summary-table td { padding: 10px 12px; border-bottom: 1px solid #eee; white-space: nowrap; }
+    .buy { background: #e8f5e9; color: #2e7d32; } .sell { background: #ffebee; color: #c62828; } .hold { background: #fff8e1; color: #f57f17; }
+    .etf-card { background: white; border-radius: 12px; padding: 24px; margin: 20px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-top: 4px solid #0288d1; }
+    .sell-table { width: 100%; border-collapse: collapse; margin: 4px 0 8px; background: #fff7f2; }
+    .sell-table th { background: #ffe0cc; color: #c2410c; padding: 8px 10px; font-size: 13px; text-align: center; }
+    .sell-table td { padding: 9px; border-bottom: 1px solid #f3e0d5; font-size: 13px; text-align: center; }
+    .buy-table { width: 100%; border-collapse: collapse; margin: 4px 0 8px; background: #f2f7ff; }
+    .buy-table th { background: #d6e4ff; color: #1565c0; padding: 8px 10px; font-size: 13px; text-align: center; }
+    .buy-table td { padding: 9px; border-bottom: 1px solid #dce8f5; font-size: 13px; text-align: center; }
+    .market-overview, .semi-section, .trend-section { background: white; border-radius: 12px; padding: 24px; margin: 20px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .semi-section { border-left: 6px solid #00897b; } .semi-section h2 { color: #00695c; }
+    .semi-implication { margin-top: 14px; padding: 12px 14px; background: #e0f2f1; border-radius: 8px; font-size: 14px; color: #00695c; font-weight: 600; }
+    .trend-section { border-left: 6px solid #5e35b1; } .trend-section h2 { color: #4527a0; }
+    .trend-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 12px; }
+    .trend-card { background: #faf9ff; border-radius: 10px; padding: 14px; }
+    .trend-name { font-size: 14px; font-weight: 700; color: #333; margin-bottom: 6px; }
+    .trend-svg { width: 100%; height: 90px; display: block; }
+    .trend-axis { display: flex; justify-content: space-between; font-size: 11px; color: #999; margin-top: 2px; }
+    .trend-prices { font-size: 12px; color: #666; margin-top: 4px; text-align: right; }
+    .market-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin-top: 12px; }
+    .market-item { background: #f5f7fa; border-radius: 10px; padding: 14px; text-align: center; }
+    .market-name { font-size: 12px; color: #888; margin-bottom: 4px; }
+    .market-value { font-size: 17px; font-weight: bold; color: #222; }
+    .market-change { font-size: 13px; font-weight: 600; margin-top: 2px; }
+    .calendar-section { background: white; border-radius: 12px; padding: 24px; margin: 20px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 6px solid #7b1fa2; }
+    .calendar-section h2 { color: #6a1b9a; }
+    .calendar-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+    .calendar-table th { background: #f3e5f5; color: #6a1b9a; padding: 8px 10px; text-align: left; font-size: 13px; }
+    .calendar-table td { padding: 8px 10px; border-bottom: 1px solid #eee; font-size: 13px; }
+    .gemini-section { background: linear-gradient(135deg, #e8f5e9, #f1f8e9); border-radius: 12px; padding: 24px; margin: 20px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 6px solid #43a047; }
+    .gemini-section h2 { color: #2e7d32; } .gemini-content { line-height: 1.8; color: #333; }
+    .recommend-section { background: linear-gradient(135deg, #fff8e1, #fffde7); border-radius: 12px; padding: 24px; margin: 20px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.10); border-left: 6px solid #f9a825; }
+    .price { font-size: 26px; font-weight: bold; } .change-up { color: #c62828; } .change-down { color: #1565c0; }
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; } th { background: #e8eaf6; padding: 8px; text-align: left; } td { padding: 8px; border-bottom: 1px solid #eee; }
+    .footer { text-align: center; color: #999; margin-top: 40px; font-size: 13px; }
+    .rec-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-top: 12px; }
+    .rec-card { background: white; border-radius: 10px; padding: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+    .rec-name { font-weight: 700; color: #1565c0; font-size: 14px; }
+    .rec-reason { font-size: 12px; color: #555; margin-top: 6px; line-height: 1.5; }
+    @media (max-width: 600px) {
+      body { padding: 12px; } h1 { font-size: 18px; } h2 { font-size: 16px; } h3 { font-size: 15px; }
+      .summary-table th, .summary-table td { padding: 8px 10px; font-size: 12px; }
+      .sell-table th, .sell-table td, .buy-table th, .buy-table td { padding: 6px 4px; font-size: 11px; }
+      .etf-card { padding: 16px; } table { font-size: 13px; } th, td { padding: 6px 8px; }
+    }
+  </style>
+</head>
+<body>
+  <h1>💼 ETF 포트폴리오 분석 리포트 (B) — 2026-09-13</h1>
+  <p>생성 시각: <strong>2026-09-13 (일) KST</strong> | <strong>분석 기준: 2026-09-11 (금) 종가</strong></p>
+
+  <!-- ① 시장 현황 -->
+  <section class="market-overview">
+    <h2>🌐 시장 현황 (2026-09-11 종가 기준)</h2>
+    <div class="market-grid">
+      <div class="market-item">
+        <div class="market-name">KOSPI</div>
+        <div class="market-value">6,909.91</div>
+        <div class="market-change change-down">▼ -1.76%</div>
+      </div>
+      <div class="market-item">
+        <div class="market-name">KOSDAQ</div>
+        <div class="market-value">820.64</div>
+        <div class="market-change change-down">▼ -1.95%</div>
+      </div>
+      <div class="market-item">
+        <div class="market-name">S&P500</div>
+        <div class="market-value">7,656.98</div>
+        <div class="market-change change-up">▲ +0.86%</div>
+      </div>
+      <div class="market-item">
+        <div class="market-name">나스닥</div>
+        <div class="market-value">26,333</div>
+        <div class="market-change change-up">▲ +0.96%</div>
+      </div>
+      <div class="market-item">
+        <div class="market-name">원/달러 환율</div>
+        <div class="market-value">1,345.9</div>
+        <div class="market-change change-down">▼ +6.7원</div>
+      </div>
+      <div class="market-item">
+        <div class="market-name">미 10년물 금리</div>
+        <div class="market-value">4.9610%</div>
+        <div class="market-change change-down">▲ 상승 압력</div>
+      </div>
+    </div>
+    <p style="margin-top:14px;font-size:13px;color:#555;">
+      📌 한국 증시는 8월 CPI 예상 상회·유가(WTI $102.5) 급등·FOMC 금리 인상 우려로 KOSPI가 7,000선 아래로 하락. 외국인·기관 동반 순매도(합산 3.5조). 반면 미국 증시는 CPI 충격 소화 후 반등, S&P500 +0.86% 마감.
+    </p>
+  </section>
+
+  <!-- ② 미국 선행지표 -->
+  <section class="semi-section">
+    <h2>🌙 미국 시장 선행 지표 (2026-09-11 밤 마감)</h2>
+    <div class="market-grid">
+      <div class="market-item">
+        <div class="market-name">S&P500</div>
+        <div class="market-value">7,656.98</div>
+        <div class="market-change change-up">▲ +0.86%</div>
+      </div>
+      <div class="market-item">
+        <div class="market-name">나스닥</div>
+        <div class="market-value">26,333</div>
+        <div class="market-change change-up">▲ +0.96%</div>
+      </div>
+      <div class="market-item">
+        <div class="market-name">필라델피아반도체(SOX)</div>
+        <div class="market-value">~11,900</div>
+        <div class="market-change change-up">▲ 추정치</div>
+      </div>
+      <div class="market-item">
+        <div class="market-name">NVDA</div>
+        <div class="market-value">~$218</div>
+        <div class="market-change" style="color:#888;">추정치</div>
+      </div>
+      <div class="market-item">
+        <div class="market-name">원/달러</div>
+        <div class="market-value">1,345.9</div>
+        <div class="market-change change-down">환율 부담</div>
+      </div>
+    </div>
+    <p class="semi-implication">
+      💡 시사점: 미국 S&P500·나스닥 동반 반등으로 9/14(월) 국내 S&P500 ETF 및 AI 관련 ETF 강세 출발 예상. 단, FOMC(9/15~16) 금리 인상 경계심 지속, 반도체 ETF는 단기 변동성 주의.
+    </p>
+  </section>
+
+  <!-- ③ 종합 투자 의견 요약 -->
+  <section class="overall-summary">
+    <h2>📊 종합 투자 의견 요약 (2026-09-11 종가 기준)</h2>
+    <div class="table-wrapper">
+      <table class="summary-table">
+        <thead>
+          <tr>
+            <th>ETF</th>
+            <th>전일 종가</th>
+            <th>등락률</th>
+            <th>1개월 수익률</th>
+            <th>투자의견</th>
+            <th>한줄 근거</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>KODEX 200 (069500)</td>
+            <td>109,645원</td>
+            <td class="change-down">-1.76%</td>
+            <td class="change-up">+10.47%</td>
+            <td class="hold">중립</td>
+            <td>KOSPI200 단기 조정, 중기 상승 추세 유효</td>
+          </tr>
+          <tr>
+            <td>TIGER 미국S&P500 (360750)</td>
+            <td>25,440원</td>
+            <td style="color:#888;">보합</td>
+            <td class="change-down">-6.52%</td>
+            <td class="hold">중립</td>
+            <td>미국 강세 반영 지연, FOMC 전 관망 적절</td>
+          </tr>
+          <tr>
+            <td>KODEX 미국S&P500 (379800)</td>
+            <td>23,130원</td>
+            <td class="change-up">+0.06%</td>
+            <td class="change-down">-6.51%</td>
+            <td class="hold">중립</td>
+            <td>전일 미국 회복 소폭 반영, 환율 부담 공존</td>
+          </tr>
+          <tr>
+            <td>TIGER 반도체TOP10 (396500)</td>
+            <td>33,210원</td>
+            <td class="change-down">-3.5%</td>
+            <td class="change-up">+15.81%</td>
+            <td class="buy">중립-매수</td>
+            <td>1개월 강한 모멘텀, 52주고 대비 37%↓ 중기 매력</td>
+          </tr>
+          <tr>
+            <td>KODEX TDF2040 (433980)</td>
+            <td>15,520원</td>
+            <td class="change-down">-0.32%</td>
+            <td class="change-down">-1.20%</td>
+            <td class="hold">중립</td>
+            <td>분산 설계로 변동성 방어, 장기 적립 최적</td>
+          </tr>
+          <tr>
+            <td>RISE AI밸류체인커버드콜 (490590)</td>
+            <td>13,580원</td>
+            <td class="change-up">+0.95%</td>
+            <td class="change-down">-6.07%</td>
+            <td class="hold">중립</td>
+            <td>월배당 21% 매력, 주가 상승 제한 구조 인지</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ④ 주간 주가 추이 (일요일 전용) -->
+  <section class="trend-section">
+    <h2>📈 주간 주가 추이 (지난주 월~금, 2026.09.07~11)</h2>
+    <div class="trend-grid">
+
+      <!-- KODEX 200 -->
+      <div class="trend-card">
+        <div class="trend-name">KODEX 200 <span class="change-down">-1.04%</span></div>
+        <svg viewBox="0 0 300 120" class="trend-svg" preserveAspectRatio="none">
+          <polyline fill="none" stroke="#1565c0" stroke-width="2.5" points="20,59 90,30 160,15 230,24 290,110"/>
+          <circle cx="290" cy="110" r="3.5" fill="#1565c0"/>
+        </svg>
+        <div class="trend-axis"><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span></div>
+        <div class="trend-prices">110,800 → 109,645원 (금 -1.76%)</div>
+      </div>
+
+      <!-- TIGER 미국S&P500 -->
+      <div class="trend-card">
+        <div class="trend-name">TIGER 미국S&P500 <span class="change-down">-2.90%</span></div>
+        <svg viewBox="0 0 300 120" class="trend-svg" preserveAspectRatio="none">
+          <polyline fill="none" stroke="#1565c0" stroke-width="2.5" points="20,15 90,34 160,65 230,104 290,110"/>
+          <circle cx="290" cy="110" r="3.5" fill="#1565c0"/>
+        </svg>
+        <div class="trend-axis"><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span></div>
+        <div class="trend-prices">26,200 → 25,440원 (금 보합)</div>
+      </div>
+
+      <!-- KODEX 미국S&P500 -->
+      <div class="trend-card">
+        <div class="trend-name">KODEX 미국S&P500 <span class="change-down">-1.91%</span></div>
+        <svg viewBox="0 0 300 120" class="trend-svg" preserveAspectRatio="none">
+          <polyline fill="none" stroke="#1565c0" stroke-width="2.5" points="20,15 90,40 160,74 230,110 290,103"/>
+          <circle cx="290" cy="103" r="3.5" fill="#1565c0"/>
+        </svg>
+        <div class="trend-axis"><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span></div>
+        <div class="trend-prices">23,580 → 23,130원 (금 +0.06%)</div>
+      </div>
+
+      <!-- TIGER 반도체TOP10 -->
+      <div class="trend-card">
+        <div class="trend-name">TIGER 반도체TOP10 <span class="change-down">-3.04%</span></div>
+        <svg viewBox="0 0 300 120" class="trend-svg" preserveAspectRatio="none">
+          <polyline fill="none" stroke="#1565c0" stroke-width="2.5" points="20,60 90,34 160,15 230,27 290,110"/>
+          <circle cx="290" cy="110" r="3.5" fill="#1565c0"/>
+        </svg>
+        <div class="trend-axis"><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span></div>
+        <div class="trend-prices">34,250 → 33,210원 (금 -3.5%)</div>
+      </div>
+
+      <!-- KODEX TDF2040 -->
+      <div class="trend-card">
+        <div class="trend-name">KODEX TDF2040액티브 <span class="change-down">-1.02%</span></div>
+        <svg viewBox="0 0 300 120" class="trend-svg" preserveAspectRatio="none">
+          <polyline fill="none" stroke="#1565c0" stroke-width="2.5" points="20,15 90,33 160,57 230,80 290,110"/>
+          <circle cx="290" cy="110" r="3.5" fill="#1565c0"/>
+        </svg>
+        <div class="trend-axis"><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span></div>
+        <div class="trend-prices">15,680 → 15,520원 (금 -0.32%)</div>
+      </div>
+
+      <!-- RISE AI밸류체인 -->
+      <div class="trend-card">
+        <div class="trend-name">RISE AI밸류체인커버드콜 <span class="change-down">-0.88%</span></div>
+        <svg viewBox="0 0 300 120" class="trend-svg" preserveAspectRatio="none">
+          <polyline fill="none" stroke="#1565c0" stroke-width="2.5" points="20,15 90,43 160,78 230,110 290,57"/>
+          <circle cx="290" cy="57" r="3.5" fill="#1565c0"/>
+        </svg>
+        <div class="trend-axis"><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span></div>
+        <div class="trend-prices">13,700 → 13,580원 (금 +0.95%)</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ⑤ 이번 주 일정 -->
+  <section class="calendar-section">
+    <h2>🗓 이번 주 주요 일정 (2026년 9월 14~19일)</h2>
+    <table class="calendar-table">
+      <thead>
+        <tr><th>날짜</th><th>일정</th><th>중요도</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>9/14 (월)</td>
+          <td>미국 금요일 증시 강세(+0.86%) 반영 국내 상승 출발 예상 / 미국 9월 엠파이어스테이트 제조업지수</td>
+          <td>⭐⭐</td>
+        </tr>
+        <tr>
+          <td>9/15 (화)</td>
+          <td>🔴 FOMC 금리 결정 회의 1일차 (0.25%p 인상 가능) / 미국 산업생산·소매판매</td>
+          <td>⭐⭐⭐</td>
+        </tr>
+        <tr>
+          <td>9/16 (수)</td>
+          <td>🔴 FOMC 금리 결정 발표(한국시각 새벽 3시) / 파월 기자회견 / 주요국 중앙은행 빅위크 동시 결정</td>
+          <td>⭐⭐⭐</td>
+        </tr>
+        <tr>
+          <td>9/17 (목)</td>
+          <td>미국 실업수당 청구건수(주간) / 필라델피아 연준 제조업 서베이 / FOMC 결과 소화</td>
+          <td>⭐⭐</td>
+        </tr>
+        <tr>
+          <td>9/18 (금)</td>
+          <td>미국 미시간대 소비자심리지수(9월) / 한국 금통위 통화정책방향 결정 (3.00% 유지 예상)</td>
+          <td>⭐⭐</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 style="font-size:14px;margin-top:16px;color:#6a1b9a;border-left:3px solid #7b1fa2;padding-left:8px;">💰 ETF 분배금 일정</h3>
+    <table class="calendar-table">
+      <thead>
+        <tr><th>ETF</th><th>분배락일</th><th>지급일</th><th>예상 분배금</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>KODEX 200 (069500)</td>
+          <td>2026-10-29 (예정)</td>
+          <td>2026-10-31 (예정)</td>
+          <td>~185원 (전분기 183원)</td>
+        </tr>
+        <tr>
+          <td>TIGER 미국S&P500 (360750)</td>
+          <td>2026-10-29 (예정)</td>
+          <td>2026-10-31 (예정)</td>
+          <td>분기 배당 (수율 0.99%)</td>
+        </tr>
+        <tr>
+          <td>KODEX 미국S&P500 (379800)</td>
+          <td>2026-10-29 (예정)</td>
+          <td>2026-10-31 (예정)</td>
+          <td>분기 배당 (수율 2.05%)</td>
+        </tr>
+        <tr>
+          <td>TIGER 반도체TOP10 (396500)</td>
+          <td>2027-04 (예정)</td>
+          <td>2027-04 (예정)</td>
+          <td>75원 (연간, 2026년 4월 60원)</td>
+        </tr>
+        <tr>
+          <td>KODEX TDF2040액티브 (433980)</td>
+          <td>분기별 지급</td>
+          <td>분기별 지급</td>
+          <td>수율 1.79% (연간)</td>
+        </tr>
+        <tr>
+          <td>RISE AI밸류체인커버드콜 (490590)</td>
+          <td>2026-09-29 (예정)</td>
+          <td>2026-09-30 (예정)</td>
+          <td>235원/월 (수율 21.13%)</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ⑥ ETF 상세 카드 6개 -->
+  <h3>📦 ETF 상세 분석 (6개 퇴직연금 DC 포트폴리오)</h3>
+
+  <!-- ETF 1: KODEX 200 -->
+  <div class="etf-card">
+    <h3 style="margin-top:0;">① KODEX 200 (069500) — KOSPI200 추적</h3>
+    <table>
+      <tr><td><strong>종가 (9/11)</strong></td><td><span class="price">109,645원</span> <span class="change-down">▼ -1.76%</span></td><td><strong>NAV</strong></td><td>109,608원 <small>(괴리율 +0.03%)</small></td></tr>
+      <tr><td><strong>1개월 수익률</strong></td><td class="change-up">+10.47%</td><td><strong>52주 고/저</strong></td><td>152,455 / 44,800원</td></tr>
+      <tr><td><strong>거래량</strong></td><td>대규모 (외국인 매도)</td><td><strong>순자산</strong></td><td>약 25.3조원</td></tr>
+      <tr><td><strong>추적지수</strong></td><td>KOSPI200</td><td><strong>운용보수</strong></td><td>0.15%</td></tr>
+    </table>
+    <p><strong>📊 구성 Top5:</strong> 삼성전자 33.3% | SK하이닉스 28.0% | SK스퀘어 2.8% | POSCO홀딩스 ~2% | 현대차 ~1.8%</p>
+    <p><strong>💰 분배금:</strong> 2026.07.31 지급 183원 (연 3회 — 1·4·7·10월 예정)</p>
+    <p><strong>📉 기술 분석:</strong> 20일선 ~111,500원(위, 단기 하락 압력) | 60일선 ~95,000원(아래, 중기 상승 유지) | RSI 약 42 (매수 접근 구간) | 지지선 107,000원 | 저항선 114,000원</p>
+
+    <p style="font-size:13px;color:#888;margin-top:10px;">⚠️ 아래 표는 기계적 기술적 참고 제안입니다. 투자 권유가 아닙니다.</p>
+
+    <p><strong>📤 분할 매도 (30/30/30 — 기술적 저항 기준)</strong></p>
+    <div class="table-wrapper">
+    <table class="sell-table">
+      <thead><tr><th>단계</th><th>비중</th><th>목표가</th><th>수익률</th><th>근거</th></tr></thead>
+      <tbody>
+        <tr><td>1차</td><td>30%</td><td>115,127원</td><td>+5.0%</td><td>단기 저항 / 5% 수익 구간</td></tr>
+        <tr><td>2차</td><td>30%</td><td>120,610원</td><td>+10.0%</td><td>52주고 하단부 / +10% 구간</td></tr>
+        <tr><td>3차</td><td>30%</td><td>126,092원</td><td>+15.0%</td><td>+15% / 추세 판단</td></tr>
+        <tr><td>잔여</td><td>10%</td><td>추세추종</td><td>—</td><td>상승 지속 시 유지</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <p><strong>📥 분할 매수 (30/30/30 — 지지선 기준)</strong></p>
+    <div class="table-wrapper">
+    <table class="buy-table">
+      <thead><tr><th>단계</th><th>비중</th><th>목표가</th><th>하락률</th><th>근거</th></tr></thead>
+      <tbody>
+        <tr><td>1차</td><td>30%</td><td>105,700원</td><td>-3.6%</td><td>현재가 부근 / 단기 지지 확인 후</td></tr>
+        <tr><td>2차</td><td>30%</td><td>99,700원</td><td>-9.1%</td><td>60일선 수렴 구간</td></tr>
+        <tr><td>3차</td><td>30%</td><td>93,200원</td><td>-15.0%</td><td>52주 저가 방어선</td></tr>
+        <tr><td>잔여</td><td>10%</td><td>현금 유보</td><td>—</td><td>추가 급락 대비</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p style="background:#e8f5e9;padding:10px 14px;border-radius:8px;font-size:13px;"><strong>💡 투자 의견 (중립):</strong> KOSPI 단기 조정 구간, 60일선 위에서 중기 상승 추세 유지. CPI 고점 확인 후 반등 기대. 1개월 +10.47%의 강한 모멘텀, 단기 되돌림 후 매수 접근 유효.</p>
+  </div>
+
+  <!-- ETF 2: TIGER 미국S&P500 -->
+  <div class="etf-card">
+    <h3 style="margin-top:0;">② TIGER 미국S&P500 (360750) — S&P500 추적</h3>
+    <table>
+      <tr><td><strong>종가 (9/11)</strong></td><td><span class="price">25,440원</span> <span style="color:#888;">보합</span></td><td><strong>NAV</strong></td><td>25,332원 <small>(괴리율 +0.43%)</small></td></tr>
+      <tr><td><strong>1개월 수익률</strong></td><td class="change-down">-6.52%</td><td><strong>52주 고/저</strong></td><td>약 31,000 / 19,500원</td></tr>
+      <tr><td><strong>거래량</strong></td><td>중간 (보합 흐름)</td><td><strong>순자산</strong></td><td>약 20조원</td></tr>
+      <tr><td><strong>추적지수</strong></td><td>S&P 500 (KRW 환산)</td><td><strong>운용보수</strong></td><td>0.0068%</td></tr>
+    </table>
+    <p><strong>📊 구성 Top5:</strong> NVIDIA 8.25% | APPLE 7.05% | MICROSOFT 5.56% | AMAZON 3.76% | ALPHABET 2.95%</p>
+    <p><strong>💰 분배금:</strong> 분기 배당 (연간 수율 약 0.99%), 다음 분배 10월 예정</p>
+    <p><strong>📉 기술 분석:</strong> 20일선 ~26,400원(위, 단기 부담) | 60일선 ~22,800원(아래) | RSI 약 45 | 지지선 24,500원 | 저항선 27,000원</p>
+
+    <p style="font-size:13px;color:#888;margin-top:10px;">⚠️ 아래 표는 기계적 기술적 참고 제안입니다. 투자 권유가 아닙니다.</p>
+
+    <p><strong>📤 분할 매도 (30/30/30)</strong></p>
+    <div class="table-wrapper">
+    <table class="sell-table">
+      <thead><tr><th>단계</th><th>비중</th><th>목표가</th><th>수익률</th><th>근거</th></tr></thead>
+      <tbody>
+        <tr><td>1차</td><td>30%</td><td>26,712원</td><td>+5.0%</td><td>단기 저항 / 20일선 상단</td></tr>
+        <tr><td>2차</td><td>30%</td><td>27,984원</td><td>+10.0%</td><td>52주고 중간 저항</td></tr>
+        <tr><td>3차</td><td>30%</td><td>29,256원</td><td>+15.0%</td><td>+15% / 추세 재확인</td></tr>
+        <tr><td>잔여</td><td>10%</td><td>추세추종</td><td>—</td><td>미국 강세 지속 시</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <p><strong>📥 분할 매수 (30/30/30)</strong></p>
+    <div class="table-wrapper">
+    <table class="buy-table">
+      <thead><tr><th>단계</th><th>비중</th><th>목표가</th><th>하락률</th><th>근거</th></tr></thead>
+      <tbody>
+        <tr><td>1차</td><td>30%</td><td>24,500원</td><td>-3.7%</td><td>현재가 부근 지지</td></tr>
+        <tr><td>2차</td><td>30%</td><td>22,900원</td><td>-10.0%</td><td>60일선 근접 구간</td></tr>
+        <tr><td>3차</td><td>30%</td><td>21,600원</td><td>-15.1%</td><td>강력 지지 구간</td></tr>
+        <tr><td>잔여</td><td>10%</td><td>현금 유보</td><td>—</td><td>FOMC 충격 대비</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p style="background:#e8f5e9;padding:10px 14px;border-radius:8px;font-size:13px;"><strong>💡 투자 의견 (중립):</strong> 1개월 -6.52% 조정 후 저점 확인 중. 미국 S&P500 금요일 반등으로 월요일 개장 기대감. FOMC 인상 결정 전까지 관망 후 분할 매수 전략 권장.</p>
+  </div>
+
+  <!-- ETF 3: KODEX 미국S&P500 -->
+  <div class="etf-card">
+    <h3 style="margin-top:0;">③ KODEX 미국S&P500 (379800) — S&P500 추적</h3>
+    <table>
+      <tr><td><strong>종가 (9/11)</strong></td><td><span class="price">23,130원</span> <span class="change-up">▲ +0.06%</span></td><td><strong>NAV</strong></td><td>23,027원 <small>(괴리율 +0.45%)</small></td></tr>
+      <tr><td><strong>1개월 수익률</strong></td><td class="change-down">-6.51%</td><td><strong>52주 고/저</strong></td><td>약 28,000 / 18,500원</td></tr>
+      <tr><td><strong>거래량</strong></td><td>중간</td><td><strong>순자산</strong></td><td>약 9.9조원</td></tr>
+      <tr><td><strong>추적지수</strong></td><td>S&P 500 (KRW 환산)</td><td><strong>운용보수</strong></td><td>0.0062%</td></tr>
+    </table>
+    <p><strong>📊 구성 Top5:</strong> NVIDIA 8.25% | APPLE 7.05% | MICROSOFT 5.56% | AMAZON 3.76% | ALPHABET 2.95%</p>
+    <p><strong>💰 분배금:</strong> 분기 배당 (연간 수율 약 2.05%), 다음 분배 10월 예정</p>
+    <p><strong>📉 기술 분석:</strong> 20일선 ~24,200원(위) | 60일선 ~21,000원(아래) | RSI 약 44 | 지지선 22,400원 | 저항선 24,500원</p>
+    <p><strong>📌 TIGER vs KODEX 비교:</strong> 보수(KODEX 0.0062% < TIGER 0.0068%), 분배수율(KODEX 2.05% > TIGER 0.99%) → 장기 보유 시 KODEX 약간 유리</p>
+
+    <p style="font-size:13px;color:#888;margin-top:10px;">⚠️ 아래 표는 기계적 기술적 참고 제안입니다. 투자 권유가 아닙니다.</p>
+
+    <p><strong>📤 분할 매도 (30/30/30)</strong></p>
+    <div class="table-wrapper">
+    <table class="sell-table">
+      <thead><tr><th>단계</th><th>비중</th><th>목표가</th><th>수익률</th><th>근거</th></tr></thead>
+      <tbody>
+        <tr><td>1차</td><td>30%</td><td>24,287원</td><td>+5.0%</td><td>20일선 돌파 후 저항</td></tr>
+        <tr><td>2차</td><td>30%</td><td>25,443원</td><td>+10.0%</td><td>중기 저항선</td></tr>
+        <tr><td>3차</td><td>30%</td><td>26,600원</td><td>+15.0%</td><td>+15% / 52주고 근접</td></tr>
+        <tr><td>잔여</td><td>10%</td><td>추세추종</td><td>—</td><td>미국 강세 지속 시</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <p><strong>📥 분할 매수 (30/30/30)</strong></p>
+    <div class="table-wrapper">
+    <table class="buy-table">
+      <thead><tr><th>단계</th><th>비중</th><th>목표가</th><th>하락률</th><th>근거</th></tr></thead>
+      <tbody>
+        <tr><td>1차</td><td>30%</td><td>22,300원</td><td>-3.6%</td><td>현재 지지 확인 구간</td></tr>
+        <tr><td>2차</td><td>30%</td><td>20,800원</td><td>-10.1%</td><td>60일선 접근 구간</td></tr>
+        <tr><td>3차</td><td>30%</td><td>19,660원</td><td>-15.0%</td><td>52주 저가 수준</td></tr>
+        <tr><td>잔여</td><td>10%</td><td>현금 유보</td><td>—</td><td>추가 변동성 대비</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p style="background:#e8f5e9;padding:10px 14px;border-radius:8px;font-size:13px;"><strong>💡 투자 의견 (중립):</strong> TIGER와 동일 지수 추적이나 보수·분배수율 소폭 우위. FOMC 이후 방향성 확인 후 비중 확대 검토.</p>
+  </div>
+
+  <!-- ETF 4: TIGER 반도체TOP10 -->
+  <div class="etf-card">
+    <h3 style="margin-top:0;">④ TIGER 반도체TOP10 (396500) — FnGuide 반도체TOP10 추적</h3>
+    <table>
+      <tr><td><strong>종가 (9/11)</strong></td><td><span class="price">33,210원</span> <span class="change-down">▼ -3.5% (추정)</span></td><td><strong>NAV</strong></td><td>~33,175원 <small>(괴리율 +0.10%)</small></td></tr>
+      <tr><td><strong>1개월 수익률</strong></td><td class="change-up">+15.81%</td><td><strong>52주 고/저</strong></td><td>53,335 / 10,541원</td></tr>
+      <tr><td><strong>거래량</strong></td><td>높음 (반도체 매도세)</td><td><strong>순자산</strong></td><td>약 8,167억원</td></tr>
+      <tr><td><strong>추적지수</strong></td><td>FnGuide 반도체TOP10</td><td><strong>운용보수</strong></td><td>0.45%</td></tr>
+    </table>
+    <p><strong>📊 구성 Top5:</strong> 삼성전자 27.5% | SK하이닉스 24.3% | SK스퀘어 20.8% | 한미반도체 ~8% | DB하이텍 ~5%</p>
+    <p><strong>💰 분배금:</strong> 2026.04 지급 60원, 연간 75원 (수율 약 0.20%)</p>
+    <p><strong>📉 기술 분석:</strong> 20일선 ~40,000원(위, 단기 하락) | 60일선 ~25,000원(아래) | RSI 약 38 (과매도 근접) | 지지선 31,000원 | 저항선 37,000원</p>
+    <p><strong>⚠️ 52주 고 대비:</strong> 53,335원 → 33,210원 = -37.7% 하락 | 강한 반도체 하락장 후 중기 회복 기대</p>
+
+    <p style="font-size:13px;color:#888;margin-top:10px;">⚠️ 아래 표는 기계적 기술적 참고 제안입니다. 투자 권유가 아닙니다.</p>
+
+    <p><strong>📤 분할 매도 (30/30/30)</strong></p>
+    <div class="table-wrapper">
+    <table class="sell-table">
+      <thead><tr><th>단계</th><th>비중</th><th>목표가</th><th>수익률</th><th>근거</th></tr></thead>
+      <tbody>
+        <tr><td>1차</td><td>30%</td><td>34,871원</td><td>+5.0%</td><td>단기 저항 / 20일선 하단</td></tr>
+        <tr><td>2차</td><td>30%</td><td>36,531원</td><td>+10.0%</td><td>20일선 상단 / +10%</td></tr>
+        <tr><td>3차</td><td>30%</td><td>38,192원</td><td>+15.0%</td><td>+15% / 저항 구간</td></tr>
+        <tr><td>잔여</td><td>10%</td><td>추세추종</td><td>—</td><td>반도체 사이클 상단 도달 시</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <p><strong>📥 분할 매수 (30/30/30)</strong></p>
+    <div class="table-wrapper">
+    <table class="buy-table">
+      <thead><tr><th>단계</th><th>비중</th><th>목표가</th><th>하락률</th><th>근거</th></tr></thead>
+      <tbody>
+        <tr><td>1차</td><td>30%</td><td>32,000원</td><td>-3.6%</td><td>단기 지지선</td></tr>
+        <tr><td>2차</td><td>30%</td><td>29,900원</td><td>-10.0%</td><td>60일선 수렴 구간</td></tr>
+        <tr><td>3차</td><td>30%</td><td>28,230원</td><td>-15.0%</td><td>추가 조정 시 저가 분할</td></tr>
+        <tr><td>잔여</td><td>10%</td><td>현금 유보</td><td>—</td><td>반도체 업사이클 가속 대비</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p style="background:#e0f2f1;padding:10px 14px;border-radius:8px;font-size:13px;"><strong>💡 투자 의견 (중립-매수):</strong> 1년 수익률 +188%, 1개월 +15.81%의 강한 모멘텀. 52주 고 대비 38%↓ 위치로 중기 매력. RSI 38로 과매도 구간 근접. 단기 반도체 변동성 높으나 HBM/AI 수요 장기 성장 기대. 분할 매수 전략 권장.</p>
+  </div>
+
+  <!-- ETF 5: KODEX TDF2040 -->
+  <div class="etf-card">
+    <h3 style="margin-top:0;">⑤ KODEX TDF2040액티브 (433980) — 타겟데이트펀드 2040</h3>
+    <table>
+      <tr><td><strong>종가 (9/11)</strong></td><td><span class="price">15,520원</span> <span class="change-down">▼ -0.32%</span></td><td><strong>NAV</strong></td><td>15,465원 <small>(괴리율 +0.35%)</small></td></tr>
+      <tr><td><strong>1개월 수익률</strong></td><td class="change-down">-1.20%</td><td><strong>52주 고/저</strong></td><td>약 17,200 / 13,000원</td></tr>
+      <tr><td><strong>거래량</strong></td><td>낮음 (안정적)</td><td><strong>순자산</strong></td><td>약 1,863.5억원</td></tr>
+      <tr><td><strong>추적지수</strong></td><td>액티브 (2040 TDF 전략)</td><td><strong>운용보수</strong></td><td>0.25% (TER 0.31%)</td></tr>
+    </table>
+    <p><strong>📊 구성 Top5:</strong> SPDR Portfolio ETF 25.65% | Vanguard VT 25.64% | KODEX ESG종합채권(A-이상)액티브 13.62% | KODEX 머니마켓액티브 7.42% | KODEX 종합채권(AA-이상)액티브 7.33%</p>
+    <p><strong>💰 분배금:</strong> 연 4회 분기 배당, 12개월 분배 수율 약 1.79%</p>
+    <p><strong>📉 기술 분석:</strong> 20일선 ~15,750원(위, 소폭 부담) | 60일선 ~14,500원(아래) | RSI 약 48 (중립) | 지지선 15,100원 | 저항선 16,200원</p>
+    <p><strong>💼 DC 적합성:</strong> 주식·채권 자동 배분, 퇴직연금 DC 장기 운용 최적 상품 (무제한 편입 가능)</p>
+
+    <p style="font-size:13px;color:#888;margin-top:10px;">⚠️ 아래 표는 기계적 기술적 참고 제안입니다. 투자 권유가 아닙니다.</p>
+
+    <p><strong>📤 분할 매도 (30/30/30)</strong></p>
+    <div class="table-wrapper">
+    <table class="sell-table">
+      <thead><tr><th>단계</th><th>비중</th><th>목표가</th><th>수익률</th><th>근거</th></tr></thead>
+      <tbody>
+        <tr><td>1차</td><td>30%</td><td>16,296원</td><td>+5.0%</td><td>단기 저항 / 20일선 상단</td></tr>
+        <tr><td>2차</td><td>30%</td><td>17,072원</td><td>+10.0%</td><td>저항 구간</td></tr>
+        <tr><td>3차</td><td>30%</td><td>17,848원</td><td>+15.0%</td><td>+15% / 52주고 접근</td></tr>
+        <tr><td>잔여</td><td>10%</td><td>추세추종</td><td>—</td><td>글로벌 자산 상승 시</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <p><strong>📥 분할 매수 (30/30/30)</strong></p>
+    <div class="table-wrapper">
+    <table class="buy-table">
+      <thead><tr><th>단계</th><th>비중</th><th>목표가</th><th>하락률</th><th>근거</th></tr></thead>
+      <tbody>
+        <tr><td>1차</td><td>30%</td><td>14,950원</td><td>-3.7%</td><td>현재가 부근 지지</td></tr>
+        <tr><td>2차</td><td>30%</td><td>13,970원</td><td>-10.0%</td><td>60일선 수렴 구간</td></tr>
+        <tr><td>3차</td><td>30%</td><td>13,190원</td><td>-15.0%</td><td>강력 지지 / 52주저 근접</td></tr>
+        <tr><td>잔여</td><td>10%</td><td>현금 유보</td><td>—</td><td>글로벌 이벤트 대비</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p style="background:#e8f5e9;padding:10px 14px;border-radius:8px;font-size:13px;"><strong>💡 투자 의견 (중립):</strong> 전체 시장 하락 대비 -0.32%로 방어 효과 확인. 글로벌 주식+채권 분산 설계로 FOMC 금리 충격 완충. 퇴직연금 장기 적립식 투자의 핵심 안정 자산. 현 수준 꾸준한 매수 적합.</p>
+  </div>
+
+  <!-- ETF 6: RISE AI밸류체인 -->
+  <div class="etf-card">
+    <h3 style="margin-top:0;">⑥ RISE 미국AI밸류체인데일리고정커버드콜 (490590)</h3>
+    <table>
+      <tr><td><strong>종가 (9/11)</strong></td><td><span class="price">13,580원</span> <span class="change-up">▲ +0.95%</span></td><td><strong>NAV</strong></td><td>13,501원 <small>(괴리율 +0.59%)</small></td></tr>
+      <tr><td><strong>1개월 수익률</strong></td><td class="change-down">-6.07%</td><td><strong>52주 고/저</strong></td><td>약 16,500 / 11,200원</td></tr>
+      <tr><td><strong>1년 분배수율</strong></td><td class="change-up">21.13%</td><td><strong>순자산</strong></td><td>약 754.1억원</td></tr>
+      <tr><td><strong>추적지수</strong></td><td>KEDI 미국AI밸류체인 90%+커버드콜</td><td><strong>운용보수</strong></td><td>0.25%</td></tr>
+    </table>
+    <p><strong>📊 구성 Top5:</strong> NVIDIA 14.5% | Alphabet 12.3% | Marvell Technology 10.5% | Microsoft 9.2% (추정) | Meta 8.8% (추정)</p>
+    <p><strong>💰 분배금:</strong> 월배당 235원/월 (1.66%), 연간 21.13% 분배 수율, 다음 지급 2026.09.30 예정</p>
+    <p><strong>📉 기술 분석:</strong> 20일선 ~14,200원(위) | 60일선 ~12,500원(아래) | RSI 약 43 | 지지선 13,000원 | 저항선 14,500원</p>
+    <p><strong>⚠️ 커버드콜 특성:</strong> 상방 수익 제한 (주가 급등 시 지수 대비 상승 제한), 대신 월배당으로 꾸준한 현금 흐름. 원화 약세(1,345.9원) 환율 효과로 달러 자산 매력 추가.</p>
+
+    <p style="font-size:13px;color:#888;margin-top:10px;">⚠️ 아래 표는 기계적 기술적 참고 제안입니다. 투자 권유가 아닙니다.</p>
+
+    <p><strong>📤 분할 매도 (30/30/30)</strong></p>
+    <div class="table-wrapper">
+    <table class="sell-table">
+      <thead><tr><th>단계</th><th>비중</th><th>목표가</th><th>수익률</th><th>근거</th></tr></thead>
+      <tbody>
+        <tr><td>1차</td><td>30%</td><td>14,259원</td><td>+5.0%</td><td>단기 저항 / 20일선 상단</td></tr>
+        <tr><td>2차</td><td>30%</td><td>14,938원</td><td>+10.0%</td><td>저항 구간</td></tr>
+        <tr><td>3차</td><td>30%</td><td>15,617원</td><td>+15.0%</td><td>+15% 구간</td></tr>
+        <tr><td>잔여</td><td>10%</td><td>추세추종</td><td>—</td><td>AI 시장 급등 시 유지</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <p><strong>📥 분할 매수 (30/30/30)</strong></p>
+    <div class="table-wrapper">
+    <table class="buy-table">
+      <thead><tr><th>단계</th><th>비중</th><th>목표가</th><th>하락률</th><th>근거</th></tr></thead>
+      <tbody>
+        <tr><td>1차</td><td>30%</td><td>13,090원</td><td>-3.6%</td><td>현재 지지 / 월배당 수익 확보 구간</td></tr>
+        <tr><td>2차</td><td>30%</td><td>12,220원</td><td>-10.0%</td><td>60일선 수렴 / 분배 재투자 유리</td></tr>
+        <tr><td>3차</td><td>30%</td><td>11,540원</td><td>-15.0%</td><td>52주 저가 근접 / 고배당 메리트 극대화</td></tr>
+        <tr><td>잔여</td><td>10%</td><td>현금 유보</td><td>—</td><td>AI 섹터 추가 조정 대비</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p style="background:#e8f5e9;padding:10px 14px;border-radius:8px;font-size:13px;"><strong>💡 투자 의견 (중립):</strong> 월배당 21% 수율이 퇴직연금 현금흐름 확보에 매력적. AI 관련 기업 장기 성장 기대. 단, 1개월 -6.07% 조정 중이며 커버드콜로 주가 상승 제한. 현 수준 일부 비중 유지, FOMC 이후 AI 반등 시 추가 편입 검토.</p>
+  </div>
+
+  <!-- ⑦ Gemini AI 종합 의견 -->
+  <section class="gemini-section">
+    <h2>🔮 Gemini AI 종합 의견 (2.5 Flash — 2026.09.13)</h2>
+    <div class="gemini-content">
+      <p><strong>▶ 시장 전반 평가</strong><br>
+      한국 증시(KOSPI -1.76%, KOSDAQ -1.95%)는 미국 8월 CPI 예상 상회, FOMC 금리 인상 가능성, WTI 유가 $102 급등 등 거시 경제 불확실성으로 약세를 보였습니다. 외국인·기관 동반 순매도(합산 3.5조원)가 낙폭을 키웠으며, 반도체 대형주(삼성전자 -3.53%, SK스퀘어 -4.05%)가 특히 부진했습니다. 반면 미국 증시(S&P500 +0.86%, 나스닥 +0.96%)는 같은 날 반등하며 CPI 충격을 소화했습니다.</p>
+
+      <p><strong>▶ 미국 강세가 국내 ETF에 미칠 영향</strong><br>
+      미국 S&P500·나스닥 동반 반등은 9월 14일(월) 국내 S&P500 ETF(TIGER·KODEX) 및 AI 관련 ETF(RISE AI밸류체인) 강세 출발 요인입니다. 특히 NVIDIA·빅테크 회복 시 TIGER 반도체TOP10도 낙폭 만회 기대. 단, 원달러 1,345.9원 강세 환율이 외국인 자금 유입을 다소 억제할 수 있으며, 미 10년물 4.96% 고금리 환경은 성장주 밸류에이션 부담으로 잔존합니다.</p>
+
+      <p><strong>▶ ETF별 간단 의견</strong></p>
+      <ul>
+        <li><strong>①KODEX 200:</strong> 중기 상승(1M +10.47%) 유효하나 단기 조정. FOMC 이후 방향성 확인 후 분할 매수 접근.</li>
+        <li><strong>②③S&P500 ETF:</strong> 1M -6.5% 조정 후 저점 탐색 중. 미국 시장 강세 반영 지연으로 월요일 반등 기대. FOMC 결과에 따라 추가 상승 또는 재조정 가능.</li>
+        <li><strong>④TIGER 반도체TOP10:</strong> 1개월 +15.81%로 가장 강한 모멘텀, 52주 고 대비 38%↓ 위치로 중기 투자 매력. 단기 변동성 높으므로 분할 접근 권장.</li>
+        <li><strong>⑤KODEX TDF2040:</strong> 변동성 방어 효과(-0.32%) 확인. 퇴직연금 장기 투자의 핵심 자산. 꾸준한 적립 유지.</li>
+        <li><strong>⑥RISE AI밸류체인커버드콜:</strong> 월배당 21% 매력적이나 주가 상승 제한 구조. 현금흐름 중시 투자자에게 적합.</li>
+      </ul>
+
+      <p><strong>▶ 퇴직연금 장기투자 이번 주 전략</strong><br>
+      이번 주는 FOMC(9/15~16) 금리 결정이 핵심 변수입니다. 금리 인상 확정 시 단기 충격 불가피하나 "피크 금리" 인식 전환이 이후 반등 촉매 가능. 핵심 전략: ①FOMC 발표 전 비중 유지·관망, ②TDF2040 꾸준한 적립 지속, ③반도체TOP10은 RSI 38 수준 분할 매수 준비, ④AI밸류체인 월배당 재투자로 복리 효과 극대화. 장기 퇴직연금 관점에서 단기 변동성에 일희일비하지 말고 분산·분할 원칙을 지키는 것이 중요합니다.</p>
+
+      <p style="font-size:12px;color:#888;margin-top:8px;">※ 위 내용은 Gemini 2.5 Flash AI가 제공한 참고 의견입니다. 최종 투자 결정은 본인의 판단으로 하시기 바랍니다.</p>
+    </div>
+  </section>
+
+  <!-- ⑧ AI 추천 ETF -->
+  <section class="recommend-section">
+    <h2>🤖 AI 추천 ETF/종목 — 이번 주 주목 (2026.09.13)</h2>
+    <p style="color:#888;font-size:13px;">최근 1주 모멘텀·거래량·뉴스를 종합한 추천입니다. 고정 6개 ETF와 중복 제외. 참고 목적.</p>
+    <div class="rec-grid">
+      <div class="rec-card">
+        <div class="rec-name">① TIGER 미국나스닥100 (133690)</div>
+        <div class="rec-reason">미국 기술주 금요일 +0.96% 반등, FOMC 전 나스닥100 강세. AI·빅테크 밀집 구조. 이번 주 FOMC 결과 후 방향성 확인 시 추가 상승 가능.</div>
+      </div>
+      <div class="rec-card">
+        <div class="rec-name">② KODEX 인도Nifty50 (453850)</div>
+        <div class="rec-reason">미-중 갈등 심화 수혜 신흥국. 인도 경제 고성장(8%대) 지속. 한국 반도체 약세와 무관한 분산 투자처로 최근 3개월 강한 수익률.</div>
+      </div>
+      <div class="rec-card">
+        <div class="rec-name">③ RISE 글로벌온디바이스AI (480500)</div>
+        <div class="rec-reason">AI 엣지 컴퓨팅(온디바이스 AI) 성장 모멘텀. 스마트폰·PC AI 칩 수요 가속. FOMC 이슈와 상대적 무관, AI 구조 성장 테마 유효.</div>
+      </div>
+      <div class="rec-card">
+        <div class="rec-name">④ TIGER 미국채30년스트립(H) (441630)</div>
+        <div class="rec-reason">FOMC 금리 인상 사이클 피크 가시화 시 장기 국채 수혜 본격화. 금리 하락 레버리지 효과, 퇴직연금 안전자산 비중 확대 수단.</div>
+      </div>
+      <div class="rec-card">
+        <div class="rec-name">⑤ KODEX WTI원유선물(H) (261220)</div>
+        <div class="rec-reason">WTI $102.48 급등(+6.69%) 모멘텀. 지정학 리스크 및 OPEC 감산 지속. 포트폴리오 인플레이션 헤지 수단으로 단기 트레이딩 관심.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">
+    <p>본 리포트는 AI가 생성한 참고용 자료이며 투자 권유가 아닙니다. 투자 결정은 본인 책임 하에 하시기 바랍니다.</p>
+    <p>생성일: 2026-09-13 (일) KST | 분석 기준: 2026-09-11 종가 | B 리포트 (reports2/)</p>
+    <p>데이터 출처: 네이버금융, FunETF, ZeroIn ETF, 머니투데이, 한국경제, Yahoo Finance, CNBC, Gemini AI</p>
+  </div>
+</body>
+</html>
